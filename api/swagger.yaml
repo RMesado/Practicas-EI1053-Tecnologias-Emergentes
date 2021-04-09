@@ -1,0 +1,342 @@
+---
+swagger: "2.0"
+info:
+  description: "Proyecto de Edgar Heredia y Rafael Mesado"
+  version: "1.0.0"
+  title: "BLOGS"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:9000"
+basePath: "/"
+tags:
+- name: "blog"
+  description: "Un blog consta de mensajes (posts)"
+- name: "post"
+  description: "Un mensaje (post) es escrito por un usuario (user)"
+- name: "user"
+  description: "Todo sobre usuarios"
+schemes:
+- "http"
+paths:
+  /user/{userId}:
+    get:
+      tags:
+      - "user"
+      summary: "Consulta un usuario"
+      description: "Obtener datos de un usuario"
+      operationId: "getUserData"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "ID del usuario"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "No user found"
+      x-swagger-router-controller: "User"
+  /user:
+    post:
+      tags:
+      - "user"
+      summary: "Crea un usuario"
+      description: "This can only be done by the logged in user."
+      operationId: "createUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Crear un usuario"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "User"
+  /user/login:
+    post:
+      tags:
+      - "user"
+      summary: "Login"
+      description: "Need credentials in body"
+      operationId: "loginUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Credenciales"
+        required: true
+        schema:
+          $ref: "#/definitions/Credentials"
+      responses:
+        "200":
+          description: "successful operation"
+          headers:
+            X-Rate-Limit:
+              type: "integer"
+              format: "int32"
+              description: "calls per hour allowed by the user"
+            X-Expires-After:
+              type: "string"
+              format: "date-time"
+              description: "date in UTC when token expires"
+          schema:
+            type: "string"
+        "400":
+          description: "Invalid username/password supplied"
+      x-swagger-router-controller: "User"
+  /user/logout:
+    get:
+      tags:
+      - "user"
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "User"
+  /blog:
+    get:
+      tags:
+      - "blog"
+      summary: "Buscar un blog de la colección"
+      description: "Busqueda mediante palabras clave"
+      operationId: "searchBlog"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "query"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Blog"
+        "405":
+          description: "Invalid input"
+      x-swagger-router-controller: "Blog"
+    post:
+      tags:
+      - "blog"
+      summary: "Añadir un blog a la colección"
+      description: "Devuelve el ID del nuevo blog"
+      operationId: "createBlog"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Metadatos del blog"
+        required: true
+        schema:
+          $ref: "#/definitions/Blog"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Result"
+        "405":
+          description: "Invalid input"
+      x-swagger-router-controller: "Blog"
+  /blog/{category}:
+    get:
+      tags:
+      - "blog"
+      summary: "Buscar un blog de la colección por categoría"
+      description: "Busqueda mediante categoría"
+      operationId: "searchBlogCategory"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "category"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Blog"
+        "405":
+          description: "Invalid input"
+      x-swagger-router-controller: "Blog"
+  /post/{blogId}:
+    get:
+      tags:
+      - "post"
+      summary: "Obtener posts de un blog"
+      description: "Devuelve la lista de posts de un blog"
+      operationId: "getPosts"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "blogId"
+        in: "path"
+        description: "ID del blog"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Post"
+        "400":
+          description: "Invalid status value"
+      x-swagger-router-controller: "Post"
+    post:
+      tags:
+      - "post"
+      summary: "Añadir un post a un blog"
+      description: "Se devuelve el ID del nuevo post."
+      operationId: "createPost"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "blogId"
+        in: "path"
+        description: "ID del blog"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "Datos del Post"
+        required: true
+        schema:
+          $ref: "#/definitions/Post"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Result"
+        "400":
+          description: "Invalid status value"
+      x-swagger-router-controller: "Post"
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  User:
+    type: "object"
+    properties:
+      userId:
+        type: "integer"
+        format: "int64"
+      username:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+    example:
+      userId: 0
+      password: "supersecreto"
+      email: "berejena@coco.com"
+      username: "anacleto"
+  Credentials:
+    type: "object"
+    required:
+    - "password"
+    properties:
+      userId:
+        type: "integer"
+        format: "int64"
+      password:
+        type: "string"
+  Blog:
+    type: "object"
+    required:
+    - "category"
+    - "name"
+    properties:
+      blogId:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+      description:
+        type: "string"
+      authorId:
+        type: "integer"
+        format: "int64"
+      category:
+        type: "string"
+      tags:
+        type: "array"
+        items:
+          type: "string"
+    example:
+      name: "name"
+      description: "description"
+      authorId: 6
+      category: "category"
+      blogId: 0
+      tags:
+      - "tags"
+      - "tags"
+  Post:
+    type: "object"
+    required:
+    - "text"
+    properties:
+      postId:
+        type: "integer"
+        format: "int64"
+        description: "ID del post o comentario"
+      blogId:
+        type: "integer"
+        format: "int64"
+        description: "ID del blog al que pertenece"
+      authorId:
+        type: "integer"
+        format: "int64"
+        description: "ID del autor del post"
+      text:
+        type: "string"
+        description: "Cuerpo del mensaje"
+    example:
+      postId: 0
+      text: "text"
+      authorId: 1
+      blogId: 6
+  Result:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+    example:
+      id: 0

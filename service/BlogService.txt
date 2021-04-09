@@ -1,0 +1,118 @@
+'use strict';
+
+
+/**
+ * Añadir un blog a la colección
+ * Devuelve el ID del nuevo blog
+ *
+ * body Blog Metadatos del blog
+ * returns Result
+ **/
+ let Blogs = [{
+  "name" : "Me gustan los nabos",
+  "description" : "Platos de ricos nabos",
+  "authorId" : 0,
+  "category": "comida",
+  "blogId" : 0,
+  "tags": [
+    "nabos",
+    "comida"
+  ] 
+}]
+exports.createBlog = function(body) {
+
+  Blogs.push(body)
+
+  return {"id": Blogs.length - 1}
+  
+//   return new Promise(function(resolve, reject) {
+//     var examples = {};
+//     examples['application/json'] = {
+//   "id" : 0
+// };
+//     if (Object.keys(examples).length > 0) {
+//       resolve(examples[Object.keys(examples)[0]]);
+//     } else {
+//       resolve();
+//     }
+//   });
+}
+
+
+/**
+ * Buscar un blog de la colección
+ * Busqueda mediante palabras clave
+ *
+ * query String 
+ * returns List
+ **/
+exports.searchBlog = function(query) {
+  query = query.trim().toLowerCase()
+  
+  return Blogs.filter(blog => blog.name.toLowerCase().includes(query) || 
+                              blog.description.toLowerCase().includes(query) /*||
+                              blog.category.toLowerCase().includes(query)*/)
+
+//   return new Promise(function(resolve, reject) {
+//     var examples = {};
+//     examples['application/json'] = [ {
+//   "name" : "name",
+//   "description" : "description",
+//   "authorId" : 6,
+//   "category" : "category",
+//   "blogId" : 0,
+//   "tags" : [ "tags", "tags" ]
+// }, {
+//   "name" : "name",
+//   "description" : "description",
+//   "authorId" : 6,
+//   "category" : "category",
+//   "blogId" : 0,
+//   "tags" : [ "tags", "tags" ]
+// } ];
+//     if (Object.keys(examples).length > 0) {
+//       resolve(examples[Object.keys(examples)[0]]);
+//     } else {
+//       resolve();
+//     }
+//   });
+}
+
+
+/**
+ * Buscar un blog de la colección por categoría
+ * Busqueda mediante categoría
+ *
+ * category String 
+ * returns List
+ **/
+exports.searchBlogCategory = function(category) {
+  query = query.trim().toLowerCase()
+  
+  return Blogs.filter(blog => blog.category.toLowerCase().includes(query))
+
+//   return new Promise(function(resolve, reject) {
+//     var examples = {};
+//     examples['application/json'] = [ {
+//   "name" : "name",
+//   "description" : "description",
+//   "authorId" : 6,
+//   "category" : "category",
+//   "blogId" : 0,
+//   "tags" : [ "tags", "tags" ]
+// }, {
+//   "name" : "name",
+//   "description" : "description",
+//   "authorId" : 6,
+//   "category" : "category",
+//   "blogId" : 0,
+//   "tags" : [ "tags", "tags" ]
+// } ];
+//     if (Object.keys(examples).length > 0) {
+//       resolve(examples[Object.keys(examples)[0]]);
+//     } else {
+//       resolve();
+//     }
+//   });
+}
+
