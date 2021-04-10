@@ -144,9 +144,11 @@
 
     <b-container>
       <div class="input-group">
-        <b-form-input v-model.trim="query" size="sm" class="mr-sm-2" placeholder="Buscar posts"
-          @keyup.enter="searchBlogs"></b-form-input>
-        <b-button type="submit" size="sm" class="my-2 my-sm-0" @click="searchBlogs">Buscar</button>
+        <b-form @submit="searchBlogs">
+          <b-form-input v-model.trim="query" size="sm" class="mr-sm-2" placeholder="Buscar posts"
+            @keyup.enter="searchBlogs"></b-form-input>
+          <b-button type="submit" size="sm" class="my-2 my-sm-0">Buscar</button>
+        </b-form>
       </div>
       <b-container v-show="blogs.length>0">
         <b-card title="Resultados">
