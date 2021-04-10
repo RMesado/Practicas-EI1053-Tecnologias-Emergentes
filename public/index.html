@@ -41,17 +41,17 @@
             <b-form-group>
               <b-dropdown-item href="#">
                 <!-- <b-form-button v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="comida"> -->
-                <b-form-button name="some-radios" value="comida">
+                <b-form-button name="categoria" value="comida">
                   Comida</b-form-button>
               </b-dropdown-item>
 
               <b-dropdown-item href="#">
-                <b-form-button name="some-radios" value="ejercicio">
+                <b-form-button name="categoria" value="ejercicio">
                   Ejercicio</b-form-button>
               </b-dropdown-item>
 
               <b-dropdown-item href="#">
-                <b-form-button name="some-radios" value="vida">
+                <b-form-button name="categoria" value="vida">
                   Estilo de vida</b-form-button>
               </b-dropdown-item>
 
@@ -89,15 +89,14 @@
         </b-card>
       </b-container>
       <b-alert v-show="blogId<0" variant="warning">No hay resultados</b-alert>
-      
+
       <b-card>
 
-          <b-table responsive :items="posts"></b-table>
+        <b-table responsive :items="posts"></b-table>
 
-          <b-form-group>
-             <b-form-input v-model.trim="post" placeholder="Nuevo comentario" 
-                           @keyup.enter="addPost">
-             </b-form-input>
+        <b-form-group>
+          <b-form-input v-model.trim="post" placeholder="Nuevo comentario" @keyup.enter="addPost">
+          </b-form-input>
 
       </b-card>
     </b-container>
@@ -154,48 +153,17 @@
     window.app = new Vue({
       el: '#app',
       data: {
-        name: '', //nombre de usuario (no se usa)
+        username: '', //nombre de usuario (no se usa)
+        userId: -1,
         query: '', //búsqueda
         blogId: -1, //blog activado
-        blogs: [
-            {
-            "name": "nabo",
-            "description": "nabo",
-            "authorId": 0,
-            "category": "comida",
-            "blogId": 0,
-            "tags": [
-              "tags",
-              "tags"
-            ]
-          }
-          , {
-            "name": "zurullo",
-            "description": "zurullo",
-            "authorId": 0,
-            "category": "ejercicio",
-            "blogId": 1,
-            "tags": [
-              "tags",
-              "tags"
-            ]
-          }
-        ], //blogs de la búsqueda
-        posts: [
-          {
-            "postId": 0,
-            "text": "Nabocop",
-            "authorId": 0,
-            "blogId": 0
-          },
-          {
-            "postId": 1,
-            "text": "Menudo zurullo he hecho",
-            "authorId": 0,
-            "blogId": 1
-          }
-
-        ], //posts del blog activado
+        blogName: '',
+        blogDesc: '',
+        category: '',
+        postId: -1,
+        users: [],
+        blogs: [], //blogs de la búsqueda
+        posts: [], //posts del blog activado
         post: ''  //nuevo post
       },
       computed: {
@@ -229,8 +197,8 @@
         },
         addPost() {
           var self = this
-
-          var postData = { postId: 0, text: this.post, authorId: 0, blogId: this.blogId }
+          this.postId += 1
+          var postData = { postId: this.postId, text: this.post, authorId: 0, blogId: this.blogId }
 
           var opts = {
             method: 'POST',
@@ -245,21 +213,35 @@
             .then(function (r) { return r.json() })
             .then(function (data) { console.log(data) })
             .catch(function (error) { console.log(error) })
+        },
+        addPost() {
+          var self = this
+          this.postId += 1
+          var blogData = {}
+
+          var opts = {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(blogData)
+          }
+        },
+        created() {
+          var self = this
+          var ES = new EventSource('/news') //ruta API con notificaciones
+
+          console.log('Creando listener de eventos de servidor...')
+
+          ES.addEventListener('new-post', function (event) {
+            var data = JSON.parse(JSON.parse(event.data))
+            //bytes to string -> string to json
+            //console.log(data)
+            if (data.blogId == self.blogId)
+              self.posts.push(data)
+          }, false)
         }
-      },
-      created() {
-        var self = this
-        var ES = new EventSource('/news') //ruta API con notificaciones
-
-        console.log('Creando listener de eventos de servidor...')
-
-        ES.addEventListener('new-post', function (event) {
-          var data = JSON.parse(JSON.parse(event.data))
-          //bytes to string -> string to json
-          //console.log(data)
-          if (data.blogId == self.blogId)
-            self.posts.push(data)
-        }, false)
       }
     })
   </script>
