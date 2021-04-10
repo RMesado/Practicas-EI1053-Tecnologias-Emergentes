@@ -320,14 +320,12 @@
           var pass = document.getElementById("regContraseña")
           let listaUsuarios = this.users.filter(u => u.username.toLowerCase().includes(username.value)
                                           || u.email.toLowerCase().includes(email.value))
-          alert("Users:"+this.users.length)
-          alert("ListaUsuarios:" + listaUsuarios.length)
           if (listaUsuarios.length!=0){
             alert("Ese usuario ya existe")
           }
           else{
             this.users.push({userId:this.users.length, password:pass.value,email:email.value, username: username.value});
-            alert(this.users.length)
+            alert(this.users[this.users.length-1].username+this.users[this.users.length-1].email)
           }
         }
       }
