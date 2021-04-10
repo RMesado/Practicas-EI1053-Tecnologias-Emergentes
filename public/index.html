@@ -63,8 +63,77 @@
             <template #button-content>
               <em>Usuario</em>
             </template>
-            <b-dropdown-item href="#">Iniciar Sesión</b-dropdown-item>
-            <b-dropdown-item href="#">Registrarse</b-dropdown-item>
+            <b-dropdown-item v-b-modal.modal-1>Iniciar Sesion</b-dropdown-item>
+            <b-modal id="modal-1" centered title="Iniciar Sesión" hide-footer>
+              <div class="row justify-content-center">
+                <div>
+
+                  <div class="card-body">
+                    <div class="tab-content" id="pills-tabContent">
+                      <div class="tab-pane fade show active" id="pills-beneficiary" role="tabpanel"
+                        aria-labelledby="pills-beneficiary-tab">
+                        <div class="vue-template">
+                          <form>
+                            <div class="form-group">
+                              <h4>Usuario</h4>
+                              <input type="text" class="form-control form-control-lg" />
+                            </div>
+
+                            <div class="form-group">
+                              <h4>Contraseña</h4>
+                              <input type="password" class="form-control form-control-lg" />
+                            </div>
+
+                            <button type="submit" class="btn btn-dark btn-lg btn-block">Iniciar sesión</button>
+
+                            <p class="forgot-password text-right">
+                              ¿No tienes cuenta?
+                              <b-link v-b-modal.modal-2 @click="$bvModal.hide('modal-1')"> Regístrate</b-link>
+                            </p>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </b-modal>
+            <b-dropdown-item v-b-modal.modal-2>Regístrate</b-dropdown-item>
+            <b-modal id="modal-2" centered title="Regístrate" hide-footer>
+              <div class="row justify-content-center">
+                <div>
+                  <div class="card-body">
+                    <div class="tab-content" id="pills-tabContent">
+                      <div class="tab-pane fade show active" id="pills-beneficiary" role="tabpanel"
+                        aria-labelledby="pills-beneficiary-tab">
+                        <div class="vue-template">
+                          <form>
+                            <div class="form-group">
+                              <h4>Usuario</h4>
+                              <input type="text" class="form-control form-control-lg" />
+                            </div>
+                            <div class="form-group">
+                              <h4>Email</h4>
+                              <input type="password" class="form-control form-control-lg" />
+                            </div>
+                            <div class="form-group">
+                              <h4>Contraseña</h4>
+                              <input type="password" class="form-control form-control-lg" />
+                            </div>
+                            <button type="submit" class="btn btn-dark btn-lg btn-block">Regístrate</button>
+
+                            <p class="forgot-password text-right">
+                              ¿Ya tienes cuenta?
+                              <b-link v-b-modal.modal-1 @click="$bvModal.hide('modal-2')"> Inicia Sesión</b-link>
+                            </p>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </b-modal>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
@@ -157,6 +226,7 @@
         userId: -1,
         query: '', //búsqueda
         blogId: -1, //blog activado
+<<<<<<< HEAD
         blogName: '',
         blogDesc: '',
         category: '',
@@ -164,6 +234,47 @@
         users: [],
         blogs: [], //blogs de la búsqueda
         posts: [], //posts del blog activado
+=======
+        blogs: [
+          {
+            "name": "nabo",
+            "description": "nabo",
+            "authorId": 0,
+            "category": "comida",
+            "blogId": 0,
+            "tags": [
+              "tags",
+              "tags"
+            ]
+          }
+          , {
+            "name": "zurullo",
+            "description": "zurullo",
+            "authorId": 0,
+            "category": "ejercicio",
+            "blogId": 1,
+            "tags": [
+              "tags",
+              "tags"
+            ]
+          }
+        ], //blogs de la búsqueda
+        posts: [
+          {
+            "postId": 0,
+            "text": "Nabocop",
+            "authorId": 0,
+            "blogId": 0
+          },
+          {
+            "postId": 1,
+            "text": "Menudo zurullo he hecho",
+            "authorId": 0,
+            "blogId": 1
+          }
+
+        ], //posts del blog activado
+>>>>>>> 31f87d8261378b20f4510d325699100ed02e17cb
         post: ''  //nuevo post
       },
       computed: {
