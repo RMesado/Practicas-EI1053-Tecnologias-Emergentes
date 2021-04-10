@@ -8,7 +8,7 @@
  * body Blog Metadatos del blog
  * returns Result
  **/
- let Blogs = [{}]
+ let Blogs = []
 exports.createBlog = async function(body) {
 
   Blogs.push(body)
