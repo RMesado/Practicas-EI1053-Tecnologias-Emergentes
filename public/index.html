@@ -9,7 +9,7 @@
 
   <title>SelFit - Do IT yourself</title>
 
-  <!-- Required Stylesheets --> 
+  <!-- Required Stylesheets -->
   <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
   <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
 
@@ -63,12 +63,12 @@
                           <form>
                             <div class="form-group">
                               <h4>Usuario</h4>
-                              <input type="text" class="form-control form-control-lg" required/>
+                              <input type="text" class="form-control form-control-lg" required />
                             </div>
 
                             <div class="form-group">
                               <h4>Contraseña</h4>
-                              <input type="password" class="form-control form-control-lg" required/>
+                              <input type="password" class="form-control form-control-lg" required />
                             </div>
 
                             <button type="submit" class="btn btn-dark btn-lg btn-block">Iniciar sesión</button>
@@ -97,17 +97,21 @@
                           <form id="registerForm" v-on:submit.prevent="">
                             <div class="form-group">
                               <h4>Usuario</h4>
-                              <input type="text" id="regUser" name="usuario" class="form-control form-control-lg" required/>
+                              <input type="text" id="regUser" name="usuario" class="form-control form-control-lg"
+                                required />
                             </div>
                             <div class="form-group">
                               <h4>Email</h4>
-                              <input type="text" id="regEmail" name="regEmail"class="form-control form-control-lg" required/>
+                              <input type="text" id="regEmail" name="regEmail" class="form-control form-control-lg"
+                                required />
                             </div>
                             <div class="form-group">
                               <h4>Contraseña</h4>
-                              <input type="password" id="regContraseña" name="regContraseña"class="form-control form-control-lg" required/>
+                              <input type="password" id="regContraseña" name="regContraseña"
+                                class="form-control form-control-lg" required />
                             </div>
-                            <button @click="createUser()+$bvModal.hide('modal-2')" class="btn btn-dark btn-lg btn-block">Regístrate</button>
+                            <button @click="createUser()+$bvModal.hide('modal-2')"
+                              class="btn btn-dark btn-lg btn-block">Regístrate</button>
 
                             <p class="forgot-password text-right">
                               ¿Ya tienes cuenta?
@@ -126,10 +130,7 @@
       </b-collapse>
     </b-navbar>
 
-    <br>
-    </br>
-
-    <b-container>
+    <b-container class="mt-4">
       <div>
         <b-dropdown text="Categorías" right class="mb-2">
           <!-- <b-form-button v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="comida"> -->
@@ -147,18 +148,29 @@
               Estilo de vida</b-form-button>
           </b-dropdown-item>
         </b-dropdown>
-        
-        <b-form @submit="searchBlogs" class="input-group">
+
+        <b-form @submit="searchBlogs" class="input-group" v-on:submit.prevent="">
           <b-form-input v-model.trim="query" size="sm" class="mr-sm-2" placeholder="Buscar posts"
             @keyup.enter="searchBlogs"></b-form-input>
           <b-button type="submit" size="sm" class="my-2 my-sm-0">Buscar</button>
         </b-form>
       </div>
-      <b-container v-show="blogs.length>0">
-        <b-card title="Resultados">
-          <ul>
-            <li v-for="blog in blogs">
-              {{blog.description}} <b-button @click="getPosts(blog.blogId)">{{blog.name}}</b-button>
+      <b-container class="mt-2" v-show="blogs.length>0">
+        <b-card>
+          <ul style="list-style-type:none">
+            <li style="list-style-type:none" v-for="blog in blogs">
+              <b-dropdown type="light" variant="light" size="lg" :text="blog.name" class="mb-3">
+                <b-dropdown-header>{{blog.description}}</b-dropdown-header>
+                <b-dropdown-item v-for="post in posts">
+
+                  <template v-if="post.blogId==blog.blogId">
+                    <b-card title="Usuario 1 dice: ">
+                      <b-card-text>{{post.text}}</b-card-text>
+                    </b-card>
+                </b-dropdown-item>
+                </template>
+
+              </b-dropdown>
             </li>
           </ul>
         </b-card>
@@ -167,11 +179,12 @@
 
       <b-card>
 
-        <b-table responsive :items="posts"></b-table>
+        <!-- <b-table responsive :items="posts"></b-table> -->
 
         <b-form-group>
           <b-form-input v-model.trim="post" placeholder="Nuevo comentario" @keyup.enter="addPost">
           </b-form-input>
+        </b-form-group>
 
       </b-card>
     </b-container>
@@ -236,9 +249,41 @@
         blogDesc: '',
         category: '',
         postId: -1,
-        users: [],
-        blogs: [], //blogs de la búsqueda
-        posts: [], //posts del blog activado
+        users: [{
+          "userId": 0,
+          "password": "supersecreto",
+          "email": "berejena@coco.com",
+          "username": "anacleto"
+        }],
+        blogs: [{
+          "name": "Comida con nabos",
+          "description": "platos sencillos hechos de nabos",
+          "authorId": 6,
+          "category": "category",
+          "blogId": 0,
+          "tags": [
+            "tags",
+            "tags"
+          ]
+        },
+        {
+          "name": "Comida con zanahorias",
+          "description": "platos sencillos hechos de zanahoria",
+          "authorId": 6,
+          "category": "category",
+          "blogId": 1,
+          "tags": [
+            "tags",
+            "tags"
+          ]
+        }
+      ], //blogs de la búsqueda
+        posts: [{
+          "postId": 0,
+          "text": "Madre mia me metia un nabo ente pecho y espalda",
+          "authorId": 1,
+          "blogId": 0
+        }], //posts del blog activado
         post: ''  //nuevo post
       },
       computed: {
@@ -323,14 +368,14 @@
           var email = document.getElementById("regEmail")
           var pass = document.getElementById("regContraseña")
           let listaUsuarios = this.users.filter(u => u.username.toLowerCase().includes(username.value)
-                                          || u.email.toLowerCase().includes(email.value))
-          if (listaUsuarios.length!=0){
+            || u.email.toLowerCase().includes(email.value))
+          if (listaUsuarios.length != 0) {
             alert("Usuario o correo ya existen")
           }
-          else{
-            this.users.push({userId:this.users.length, password:pass.value,email:email.value, username: username.value});
+          else {
+            this.users.push({ userId: this.users.length, password: pass.value, email: email.value, username: username.value });
           }
-          for(let i of this.users){
+          for (let i of this.users) {
             console.log(i.username)
           }
         }
