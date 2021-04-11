@@ -41,10 +41,6 @@
             <b-button size="sm" class="my-2 my-sm-0" type="submit">Buscar</b-button>
           </b-nav-form> -->
 
-          <b-button type="dark" variant="dark" class="mb-2">
-            <b-icon icon="pencil-square"></b-icon>
-          </b-button>
-
           <b-nav-item-dropdown right>
             <!-- Using 'button-content' slot -->
             <template #button-content>
@@ -165,7 +161,7 @@
           <div>
             <b-form-group label="Categoría:" v-slot="{ ariaDescribedby }">
               <b-form-radio-group
-                id="radio-group"
+                id="categoria"
                 :aria-describedby="ariaDescribedby"
                 name="radio-sub-component"
               >
@@ -177,7 +173,7 @@
           </div>
           <div class="form-group">
             <label for="Textarea">Contenido</label>
-            <textarea class="form-control" id="contenidoPost" rows="10"></textarea>
+            <textarea class="form-control" id="contenidoPost" rows="15"></textarea>
           </div>
 
           <button @click="$bvModal.hide('modal-3')" class="btn btn-dark btn-lg" style="float:right; margin:5px">Cancelar</button>
@@ -419,18 +415,9 @@
           var self = this
           var title = document.getElementById("titulo")
           var content = document.getElementById("contenidoPost")
-          var pass = document.getElementById("regContraseña")
-          let listaUsuarios = this.users.filter(u => u.username.toLowerCase().includes(username.value)
-            || u.email.toLowerCase().includes(email.value))
-          if (listaUsuarios.length != 0) {
-            alert("Usuario o correo ya existen")
-          }
-          else {
-            this.users.push({ userId: this.users.length, password: pass.value, email: email.value, username: username.value });
-          }
-          for (let i of this.users) {
-            console.log(i.username)
-          }
+          var category = document.getElementById("categoria")
+          alert(category.value)
+          console.log(title.value+content.value+category)
         }
       }
     })
