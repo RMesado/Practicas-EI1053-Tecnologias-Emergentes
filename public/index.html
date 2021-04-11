@@ -45,27 +45,6 @@
             <b-icon icon="pencil-square"></b-icon>
           </b-button>
 
-          <b-nav-item-dropdown text="Categorías" right>
-            <b-form-group>
-              <b-dropdown-item href="#">
-                <!-- <b-form-button v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="comida"> -->
-                <b-form-button name="categoria" value="comida">
-                  Comida</b-form-button>
-              </b-dropdown-item>
-
-              <b-dropdown-item href="#">
-                <b-form-button name="categoria" value="ejercicio">
-                  Ejercicio</b-form-button>
-              </b-dropdown-item>
-
-              <b-dropdown-item href="#">
-                <b-form-button name="categoria" value="vida">
-                  Estilo de vida</b-form-button>
-              </b-dropdown-item>
-
-            </b-form-group>
-          </b-nav-item-dropdown>
-
           <b-nav-item-dropdown right>
             <!-- Using 'button-content' slot -->
             <template #button-content>
@@ -152,6 +131,23 @@
 
     <b-container>
       <div>
+        <b-dropdown text="Categorías" right class="mb-2">
+          <!-- <b-form-button v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="comida"> -->
+          <b-dropdown-item name="categoria" value="comida">
+            Comida</b-form-button>
+          </b-dropdown-item>
+
+          <b-dropdown-item href="#">
+            <b-form-button name="categoria" value="ejercicio">
+              Ejercicio</b-form-button>
+          </b-dropdown-item>
+
+          <b-dropdown-item href="#">
+            <b-form-button name="categoria" value="vida">
+              Estilo de vida</b-form-button>
+          </b-dropdown-item>
+        </b-dropdown>
+        
         <b-form @submit="searchBlogs" class="input-group">
           <b-form-input v-model.trim="query" size="sm" class="mr-sm-2" placeholder="Buscar posts"
             @keyup.enter="searchBlogs"></b-form-input>
