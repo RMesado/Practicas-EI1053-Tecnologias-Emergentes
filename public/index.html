@@ -149,6 +149,42 @@
           </b-dropdown-item>
         </b-dropdown>
 
+        <b-button v-b-modal.modal-3 class="mb-2" style="float:right;">
+          <b-icon icon="pencil-square"></b-icon>
+        </b-button>
+
+        <b-modal id="modal-3" size="xl" title="Crear un blog" centered hide-footer hide-header>
+          <div>
+            <h3>Crear un blog</h3>
+          </div>
+          <div class="form-group">
+            <label for="Titulo">Título</label>
+            <input type="text" class="form-control" id="titulo" placeholder="Escribe un título.">
+          </div>
+
+          <div>
+            <b-form-group label="Categoría:" v-slot="{ ariaDescribedby }">
+              <b-form-radio-group
+                id="radio-group"
+                :aria-describedby="ariaDescribedby"
+                name="radio-sub-component"
+              >
+                <b-form-radio value="comida">Comida</b-form-radio>
+                <b-form-radio value="ejercicio">Ejercicio</b-form-radio>
+                <b-form-radio value="estilo">Estilo de vida</b-form-radio>
+              </b-form-radio-group>
+            </b-form-group>
+          </div>
+          <div class="form-group">
+            <label for="Textarea">Contenido</label>
+            <textarea class="form-control" id="contenidoPost" rows="10"></textarea>
+          </div>
+
+          <button @click="$bvModal.hide('modal-3')" class="btn btn-dark btn-lg" style="float:right; margin:5px">Cancelar</button>
+          <button @click="createBlog()+$bvModal.hide('modal-3')" class="btn btn-dark btn-lg" style="float:right; margin:5px">Crear</button>
+
+        </b-modal>
+
         <b-form @submit="searchBlogs" class="input-group" v-on:submit.prevent="">
           <b-form-input v-model.trim="query" size="sm" class="mr-sm-2" placeholder="Buscar posts"
             @keyup.enter="searchBlogs"></b-form-input>
@@ -366,6 +402,23 @@
           var self = this
           var username = document.getElementById("regUser")
           var email = document.getElementById("regEmail")
+          var pass = document.getElementById("regContraseña")
+          let listaUsuarios = this.users.filter(u => u.username.toLowerCase().includes(username.value)
+            || u.email.toLowerCase().includes(email.value))
+          if (listaUsuarios.length != 0) {
+            alert("Usuario o correo ya existen")
+          }
+          else {
+            this.users.push({ userId: this.users.length, password: pass.value, email: email.value, username: username.value });
+          }
+          for (let i of this.users) {
+            console.log(i.username)
+          }
+        },
+        createBlog() {
+          var self = this
+          var title = document.getElementById("titulo")
+          var content = document.getElementById("contenidoPost")
           var pass = document.getElementById("regContraseña")
           let listaUsuarios = this.users.filter(u => u.username.toLowerCase().includes(username.value)
             || u.email.toLowerCase().includes(email.value))
