@@ -9,7 +9,7 @@
 
   <title>SelFit - Do IT yourself</title>
 
-  <!-- Required Stylesheets -->
+  <!-- Required Stylesheets --> 
   <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
   <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
 
@@ -17,6 +17,9 @@
   <script src="https://unpkg.com/vue"></script>
   <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
   <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+
+  <!-- Load Vue followed by BootstrapVueIcons -->
+  <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
 </head>
 
 <body>
@@ -37,6 +40,11 @@
             <b-form-input size="sm" class="mr-sm-2" placeholder="Buscar posts"></b-form-input>
             <b-button size="sm" class="my-2 my-sm-0" type="submit">Buscar</b-button>
           </b-nav-form> -->
+
+          <b-button type="dark" variant="dark" class="mb-2">
+            <b-icon icon="pencil-square"></b-icon>
+          </b-button>
+
           <b-nav-item-dropdown text="Categorías" right>
             <b-form-group>
               <b-dropdown-item href="#">
@@ -61,7 +69,7 @@
           <b-nav-item-dropdown right>
             <!-- Using 'button-content' slot -->
             <template #button-content>
-              <em>Usuario</em>
+              <em>Log in</em>
             </template>
             <b-dropdown-item v-b-modal.modal-1>Iniciar Sesion</b-dropdown-item>
             <b-modal id="modal-1" centered title="Iniciar Sesión" hide-footer>
