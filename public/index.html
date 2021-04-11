@@ -107,20 +107,20 @@
                       <div class="tab-pane fade show active" id="pills-beneficiary" role="tabpanel"
                         aria-labelledby="pills-beneficiary-tab">
                         <div class="vue-template">
-                          <form id="registerForm">
+                          <form id="registerForm" v-on:submit.prevent="">
                             <div class="form-group">
                               <h4>Usuario</h4>
                               <input type="text" id="regUser" name="usuario" class="form-control form-control-lg" required/>
                             </div>
                             <div class="form-group">
                               <h4>Email</h4>
-                              <input type="text" name="regEmail"class="form-control form-control-lg" required/>
+                              <input type="text" id="regEmail" name="regEmail"class="form-control form-control-lg" required/>
                             </div>
                             <div class="form-group">
                               <h4>Contraseña</h4>
-                              <input type="password" name="regContraseña"class="form-control form-control-lg" required/>
+                              <input type="password" id="regContraseña" name="regContraseña"class="form-control form-control-lg" required/>
                             </div>
-                            <button @click="createUser()" class="btn btn-dark btn-lg btn-block">Regístrate</button>
+                            <button @click="createUser()+$bvModal.hide('modal-2')" class="btn btn-dark btn-lg btn-block">Regístrate</button>
 
                             <p class="forgot-password text-right">
                               ¿Ya tienes cuenta?
@@ -321,11 +321,13 @@
           let listaUsuarios = this.users.filter(u => u.username.toLowerCase().includes(username.value)
                                           || u.email.toLowerCase().includes(email.value))
           if (listaUsuarios.length!=0){
-            alert("Ese usuario ya existe")
+            alert("Usuario o correo ya existen")
           }
           else{
             this.users.push({userId:this.users.length, password:pass.value,email:email.value, username: username.value});
-            alert(this.users[this.users.length-1].username+this.users[this.users.length-1].email)
+          }
+          for(let i of this.users){
+            console.log(i.username)
           }
         }
       }
