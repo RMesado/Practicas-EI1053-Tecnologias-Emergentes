@@ -160,14 +160,10 @@
 
           <div>
             <b-form-group label="Categoría:" v-slot="{ ariaDescribedby }">
-              <b-form-radio-group
-                id="categoria"
-                :aria-describedby="ariaDescribedby"
-                name="radio-sub-component"
-              >
-                <b-form-radio value="comida">Comida</b-form-radio>
-                <b-form-radio value="ejercicio">Ejercicio</b-form-radio>
-                <b-form-radio value="estilo">Estilo de vida</b-form-radio>
+              <b-form-radio-group id="radios" name="radio-sub-component">
+                <b-form-radio id="r1" name="categoria" value="comida">Comida</b-form-radio>
+                <b-form-radio id="r2" name="categoria" value="ejercicio">Ejercicio</b-form-radio>
+                <b-form-radio id="r3" name="categoria" value="estilo">Estilo de vida</b-form-radio>
               </b-form-radio-group>
             </b-form-group>
           </div>
@@ -413,11 +409,20 @@
         },
         createBlog() {
           var self = this
-          var title = document.getElementById("titulo")
-          var content = document.getElementById("contenidoPost")
-          var category = document.getElementById("categoria")
-          alert(category.value)
-          console.log(title.value+content.value+category)
+          var title = document.getElementById("titulo").value
+          var content = document.getElementById("contenidoPost").value
+          var categoria
+          if (document.getElementById('r1').checked) {
+            categoria= document.getElementById('r1').value;
+          }
+          if (document.getElementById('r2').checked) {
+            categoria= document.getElementById('r2').value;
+          }
+          if (document.getElementById('r3').checked) {
+            categoria= document.getElementById('r3').value;
+          }
+          alert(title+content+categoria)
+          this.blogs.push({name: title, description:content, authorId:0, category:categoria,blogId:this.blogs.length, tags:[]})
         }
       }
     })
