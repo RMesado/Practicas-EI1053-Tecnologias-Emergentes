@@ -143,8 +143,8 @@
     </br>
 
     <b-container>
-      <div class="input-group">
-        <b-form @submit="searchBlogs">
+      <div>
+        <b-form @submit="searchBlogs" class="input-group">
           <b-form-input v-model.trim="query" size="sm" class="mr-sm-2" placeholder="Buscar posts"
             @keyup.enter="searchBlogs"></b-form-input>
           <b-button type="submit" size="sm" class="my-2 my-sm-0">Buscar</button>
