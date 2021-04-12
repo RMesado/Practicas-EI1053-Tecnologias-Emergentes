@@ -128,10 +128,10 @@
 
     <b-container class="mt-4">
       <div>
-        <b-dropdown v-model="category" text="Categorías" right class="mb-2">
+        <b-dropdown text="Categorías" right class="mb-2">
           <!-- <b-form-button v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="comida"> -->
           <b-dropdown-item @click="searchBlogsCategory('comida')" name="categoria" value="comida">
-            Comida
+            Alimentación
           </b-dropdown-item>
 
           <b-dropdown-item @click="searchBlogsCategory('ejercicio')" name="categoria" value="ejercicio">
@@ -172,7 +172,7 @@
 
           <button @click="$bvModal.hide('modal-3')" class="btn btn-dark btn-lg"
             style="float:right; margin:5px">Cancelar</button>
-          <button @click="createBlog()+$bvModal.hide('modal-3')" class="btn btn-dark btn-lg"
+          <button @click="createBlog()+$bvModal.hide('modal-3')+loadData()" class="btn btn-dark btn-lg"
             style="float:right; margin:5px">Crear</button>
 
         </b-modal>
@@ -186,9 +186,11 @@
       <b-container class="mt-2" v-show="blogs.length>0">
         <b-card>
           <ul style="list-style-type:none">
+            <h3 v-if="resultado!=''">Mostrando resultados de: {{resultado}}</h3>
             <li style="list-style-type:none" v-for="blog in blogs">
               <b-button block v-b-toggle="'collapse-'+blog.blogId" variant="outline-dark" class="mb-3"
-                style="text-align: left" @click="getPosts(blog.blogId)">{{blog.name}}</b-button>
+                style="text-align: left" @click="blogId=blog.blogId">{{blog.name}}</b-button>
+              <!-- @click="getPosts(blog.blogId)" -->
               <b-collapse :id="'collapse-'+blog.blogId" type="light" variant="light" size="lg">
                 <h5>{{blog.description}}</h5>
                 <a style="box-shadow: none" v-for="post in posts">
@@ -201,7 +203,7 @@
                 <b-card class="mb-3">
                   <b-form-group>
                     <b-form-input v-model.trim="post" placeholder="Añade un comentario"
-                      @keyup.enter="addPost(blog.blogId)">
+                      @keyup.enter="addPost(blog.blogId)+getPosts(blog.blogId)">
                     </b-form-input>
                   </b-form-group>
                 </b-card>
@@ -222,10 +224,10 @@
         userId: -1,
         query: ' ', //búsqueda
         blogId: -1, //blog activado
-        numBlogs: -1,
+        numBlogs: 0,
         blogName: '',
         blogDesc: '',
-        category: '',
+        resultado: '',
         postId: -1,
         users: [
           // {
@@ -289,6 +291,7 @@
       methods: {
         searchBlogs() {
           var self = this
+          this.resultado = "'"+this.query+"'"
           fetch('/blog?query=' + encodeURIComponent(this.query))
             .then(function (r) { return r.json() })
             .then(function (data) {
@@ -299,6 +302,17 @@
         },
         searchBlogsCategory(category) {
           var self = this
+          switch (category) {
+            case 'comida':
+              this.resultado = 'Alimentación'
+              break;
+            case 'ejercicio':
+              this.resultado = 'Ejercicio'
+              break;
+            case 'estilo':
+              this.resultado = 'Estilo de vida'
+              break;
+          }
           fetch('/blog/' + encodeURIComponent(category))
             .then(function (r) { return r.json() })
             .then(function (data) {
@@ -311,18 +325,18 @@
           var self = this
 
           this.blogId = blogId
-
           fetch('/post/' + blogId)
             .then(function (r) { return r.json() })
             .then(function (data) {
               console.log(data)
-              self.posts = data
+              self.posts.push(data[data.length - 1])
             })
             .catch(function (error) { console.log(error) })
         },
         addPost() {
           var self = this
           var postData = { postId: this.posts.length, text: this.post, authorId: 0, blogId: this.blogId }
+          this.post = ""
           console.log(postData)
 
           var opts = {
@@ -406,7 +420,6 @@
           if (document.getElementById('r3').checked) {
             categoria = document.getElementById('r3').value;
           }
-          this.numBlogs += 1
           var blogData = { name: title, description: content, authorId: 0, category: categoria, blogId: this.numBlogs, tags: [] }
           //this.blogs.push(blogData)
 
@@ -439,12 +452,23 @@
             .then(function (r) { return r.json() })
             .then(function (data) {
               console.log(data)
+              self.numBlogs = data.length
               self.blogs = data
+
+              for (var i = 0; i < self.numBlogs; i++) {
+                fetch('/post/' + i)
+                  .then(function (r) { return r.json() })
+                  .then(function (data) {
+                    console.log(data)
+                    for (var j = 0; j < data.length; j++) {
+                      self.posts.push(data[j])
+                    }
+                  })
+                  .catch(function (error) { console.log(error) })
+              }
             })
             .catch(function (error) { console.log(error) })
         }
-
-
       },
       beforeMount() {
         this.loadData()
