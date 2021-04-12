@@ -128,20 +128,18 @@
 
     <b-container class="mt-4">
       <div>
-        <b-dropdown text="Categorías" right class="mb-2">
+        <b-dropdown v-model="category" text="Categorías" right class="mb-2">
           <!-- <b-form-button v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="comida"> -->
-          <b-dropdown-item name="categoria" value="comida">
-            Comida</b-form-button>
+          <b-dropdown-item @click="searchBlogsCategory('comida')" name="categoria" value="comida">
+            Comida
           </b-dropdown-item>
 
-          <b-dropdown-item href="#">
-            <b-form-button name="categoria" value="ejercicio">
-              Ejercicio</b-form-button>
+          <b-dropdown-item @click="searchBlogsCategory('ejercicio')" name="categoria" value="ejercicio">
+            Ejercicio
           </b-dropdown-item>
 
-          <b-dropdown-item href="#">
-            <b-form-button name="categoria" value="estilo">
-              Estilo de vida</b-form-button>
+          <b-dropdown-item @click="searchBlogsCategory('estilo')" name="categoria" value="estilo">
+            Estilo de vida
           </b-dropdown-item>
         </b-dropdown>
 
@@ -172,8 +170,10 @@
             <textarea class="form-control" id="contenidoPost" rows="15"></textarea>
           </div>
 
-          <button @click="$bvModal.hide('modal-3')" class="btn btn-dark btn-lg" style="float:right; margin:5px">Cancelar</button>
-          <button @click="createBlog()+$bvModal.hide('modal-3')" class="btn btn-dark btn-lg" style="float:right; margin:5px">Crear</button>
+          <button @click="$bvModal.hide('modal-3')" class="btn btn-dark btn-lg"
+            style="float:right; margin:5px">Cancelar</button>
+          <button @click="createBlog()+$bvModal.hide('modal-3')" class="btn btn-dark btn-lg"
+            style="float:right; margin:5px">Crear</button>
 
         </b-modal>
 
@@ -187,82 +187,31 @@
         <b-card>
           <ul style="list-style-type:none">
             <li style="list-style-type:none" v-for="blog in blogs">
-              <b-dropdown type="light" variant="light" size="lg" :text="blog.name" class="mb-3">
-                <b-dropdown-header>{{blog.description}}</b-dropdown-header>
-                <b-dropdown-item v-for="post in posts">
-
+              <b-button block v-b-toggle="'collapse-'+blog.blogId" variant="outline-dark" class="mb-3"
+                style="text-align: left" @click="getPosts(blog.blogId)">{{blog.name}}</b-button>
+              <b-collapse :id="'collapse-'+blog.blogId" type="light" variant="light" size="lg">
+                <h5>{{blog.description}}</h5>
+                <a style="box-shadow: none" v-for="post in posts">
                   <template v-if="post.blogId==blog.blogId">
-                    <b-card title="Usuario 1 dice: ">
+                    <b-card :title="users[post.authorId].username+' dice:' " class="mb-3">
                       <b-card-text>{{post.text}}</b-card-text>
                     </b-card>
-                </b-dropdown-item>
-                </template>
-
-              </b-dropdown>
+                  </template>
+                </a>
+                <b-card class="mb-3">
+                  <b-form-group>
+                    <b-form-input v-model.trim="post" placeholder="Añade un comentario"
+                      @keyup.enter="addPost(blog.blogId)">
+                    </b-form-input>
+                  </b-form-group>
+                </b-card>
+              </b-collapse>
             </li>
           </ul>
         </b-card>
       </b-container>
-      <b-alert v-show="blogId<0" variant="warning">No hay resultados</b-alert>
-
-      <b-card>
-
-        <!-- <b-table responsive :items="posts"></b-table> -->
-
-        <b-form-group>
-          <b-form-input v-model.trim="post" placeholder="Nuevo comentario" @keyup.enter="addPost">
-          </b-form-input>
-        </b-form-group>
-
-      </b-card>
     </b-container>
   </div>
-  <!-- Our application root element -->
-  <!-- <div id="app">
-      <b-container>
-        <b-jumbotron header="BLOGS" lead="Demo de consumo de servicios con Vue2 y BootstrapVue">
-          <p>Para más información consulta:</p>
-          <b-btn variant="primary" href="https://bootstrap-vue.js.org/">Quiero saber más!</b-btn>
-        </b-jumbotron>
-
-        <b-form-group horizontal :label-cols="4" label="Dime tu nombre">
-          <b-form-input v-model.trim="name"></b-form-input>
-        </b-form-group>
-
-        <b-alert variant="success" :show="showAlert">Bienvenido {{ name }}!</b-alert>
-      
-        <b-form-group horizontal :label-cols="4" label="Dime un tema">
-          <b-form-input v-model.trim="query" placeholder="...por ejemplo motos" 
-                        @keyup.enter="searchBlogs">
-          </b-form-input>
-        </b-form-group>
-
-      <div v-show="blogs.length>0">
-        <b-card title="Resultados">
-       		<ul>
-        	   <li v-for="blog in blogs">
-                {{blog.description}} <b-button @click="getPosts(blog.blogId)">{{blog.name}}</b-button>
-             </li>
-      		</ul>
-        </b-card>
-      </div>
-
-      <b-alert v-show="blogId<0" variant="warning">No hay resultados</b-alert>
-      
-      <b-card>
-
-          <b-table responsive :items="posts"></b-table>
-
-          <b-form-group>
-             <b-form-input v-model.trim="post" placeholder="Nuevo comentario" 
-                           @keyup.enter="addPost">
-             </b-form-input>
-
-      </b-card>
-
-
-      </b-container>
-    </div> -->
 
   <!-- Start running your app -->
   <script>
@@ -273,45 +222,63 @@
         userId: -1,
         query: '', //búsqueda
         blogId: -1, //blog activado
+        numBlogs: -1,
         blogName: '',
         blogDesc: '',
         category: '',
         postId: -1,
-        users: [{
-          "userId": 0,
-          "password": "supersecreto",
-          "email": "berejena@coco.com",
-          "username": "anacleto"
-        }],
-        blogs: [{
-          "name": "Comida con nabos",
-          "description": "platos sencillos hechos de nabos",
-          "authorId": 6,
-          "category": "category",
-          "blogId": 0,
-          "tags": [
-            "tags",
-            "tags"
-          ]
-        },
-        {
-          "name": "Comida con zanahorias",
-          "description": "platos sencillos hechos de zanahoria",
-          "authorId": 6,
-          "category": "category",
-          "blogId": 1,
-          "tags": [
-            "tags",
-            "tags"
-          ]
-        }
-      ], //blogs de la búsqueda
-        posts: [{
-          "postId": 0,
-          "text": "Madre mia me metia un nabo ente pecho y espalda",
-          "authorId": 1,
-          "blogId": 0
-        }], //posts del blog activado
+        users: [
+          // {
+          //   "userId": 0,
+          //   "password": "supersecreto",
+          //   "email": "berejena@coco.com",
+          //   "username": "anacleto"
+          // },
+          // {
+          //   "userId": 1,
+          //   "password": "nabos",
+          //   "email": "nabos@4ever.com",
+          //   "username": "nabocop"
+          // }
+        ],
+        blogs: [
+          // {
+          //   "name": "Comida con nabos",
+          //   "description": "platos sencillos hechos de nabos",
+          //   "authorId": 6,
+          //   "category": "category",
+          //   "blogId": 0,
+          //   "tags": [
+          //     "tags",
+          //     "tags"
+          //   ]
+          // },
+          // {
+          //   "name": "Comida con zanahorias",
+          //   "description": "platos sencillos hechos de zanahoria",
+          //   "authorId": 6,
+          //   "category": "category",
+          //   "blogId": 1,
+          //   "tags": [
+          //     "tags",
+          //     "tags"
+          //   ]
+          // }
+        ], //blogs de la búsqueda
+        posts: [
+          // {
+          //   "postId": 0,
+          //   "text": "Madre mia me metia un nabo ente pecho y espalda",
+          //   "authorId": 1,
+          //   "blogId": 0
+          // },
+          // {
+          //   "postId": 1,
+          //   "text": "Buah, yo también eh. Están to buenos",
+          //   "authorId": 0,
+          //   "blogId": 0
+          // }
+        ], //posts del blog activado
         post: ''  //nuevo post
       },
       computed: {
@@ -323,6 +290,16 @@
         searchBlogs() {
           var self = this
           fetch('/blog?query=' + encodeURIComponent(this.query))
+            .then(function (r) { return r.json() })
+            .then(function (data) {
+              console.log(data)
+              self.blogs = data
+            })
+            .catch(function (error) { console.log(error) })
+        },
+        searchBlogsCategory(category) {
+          var self = this
+          fetch('/blog/' + encodeURIComponent(category))
             .then(function (r) { return r.json() })
             .then(function (data) {
               console.log(data)
@@ -345,8 +322,8 @@
         },
         addPost() {
           var self = this
-          this.postId += 1
-          var postData = { postId: this.postId, text: this.post, authorId: 0, blogId: this.blogId }
+          var postData = { postId: this.posts.length, text: this.post, authorId: 0, blogId: this.blogId }
+          console.log(postData)
 
           var opts = {
             method: 'POST',
@@ -361,20 +338,6 @@
             .then(function (r) { return r.json() })
             .then(function (data) { console.log(data) })
             .catch(function (error) { console.log(error) })
-        },
-        addPost() {
-          var self = this
-          this.postId += 1
-          var blogData = {}
-
-          var opts = {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(blogData)
-          }
         },
         created() {
           var self = this
@@ -397,15 +360,37 @@
           var pass = document.getElementById("regContraseña")
           let listaUsuarios = this.users.filter(u => u.username.toLowerCase().includes(username.value)
             || u.email.toLowerCase().includes(email.value))
+          var userData = { userId: this.users.length, password: pass.value, email: email.value, username: username.value }
+
           if (listaUsuarios.length != 0) {
             alert("Usuario o correo ya existen")
           }
           else {
-            this.users.push({ userId: this.users.length, password: pass.value, email: email.value, username: username.value });
+            this.users.push(userData);
+
+            var opts = {
+              method: 'POST',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(userData)
+            }
+
+            fetch('/user/', opts)
+              .then(function (r) { return r.json() })
+              .then(function (data) { console.log(data) })
+              .catch(function (error) { console.log(error) })
           }
-          for (let i of this.users) {
-            console.log(i.username)
-          }
+
+          // Añadimos el nuevo usuario a la lista para las comprobaciones
+          fetch('/user/' + this.users.length)
+            .then(function (r) { return r.json() })
+            .then(function (data) {
+              console.log(data)
+              self.users.push(data)
+            })
+            .catch(function (error) { console.log(error) })
         },
         createBlog() {
           var self = this
@@ -413,17 +398,46 @@
           var content = document.getElementById("contenidoPost").value
           var categoria
           if (document.getElementById('r1').checked) {
-            categoria= document.getElementById('r1').value;
+            categoria = document.getElementById('r1').value;
           }
           if (document.getElementById('r2').checked) {
-            categoria= document.getElementById('r2').value;
+            categoria = document.getElementById('r2').value;
           }
           if (document.getElementById('r3').checked) {
-            categoria= document.getElementById('r3').value;
+            categoria = document.getElementById('r3').value;
           }
-          alert(title+content+categoria)
-          this.blogs.push({name: title, description:content, authorId:0, category:categoria,blogId:this.blogs.length, tags:[]})
+          this.numBlogs+=1
+          var blogData = { name: title, description: content, authorId: 0, category: categoria, blogId: this.numBlogs, tags: [] }
+          //this.blogs.push(blogData)
+
+          var opts = {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(blogData)
+          }
+
+          fetch('/blog/', opts)
+            .then(function (r) { return r.json() })
+            .then(function (data) { console.log(data) })
+            .catch(function (error) { console.log(error) })
+        },
+        loadUser(){
+          var self = this
+
+          fetch('/user/0')
+            .then(function (r) { return r.json() })
+            .then(function (data) {
+              console.log(data)
+              self.users.push(data)
+            })
+            .catch(function (error) { console.log(error) })
         }
+      },
+      beforeMount(){
+        this.loadUser()
       }
     })
   </script>

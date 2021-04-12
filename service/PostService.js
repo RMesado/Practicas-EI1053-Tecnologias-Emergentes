@@ -9,7 +9,7 @@
  * body Post Datos del Post
  * returns Result
  **/
- let Posts = [{}]
+ let Posts = []
 
 exports.createPost = async function(blogId,body) {
 

@@ -38,13 +38,13 @@ exports.createBlog = async function(body) {
 exports.searchBlog = async function(query) {
   query = query.trim().toLowerCase()
   
-  let listaBlogs = Blogs.filter(blog => blog.name.toLowerCase().includes(query) || 
+  // let listaBlogs = 
+  return Blogs.filter(blog => blog.name.toLowerCase().includes(query) || 
                               blog.description.toLowerCase().includes(query) /*||
                               blog.category.toLowerCase().includes(query)*/)
-  var indicesBlogs = []
-  listaBlogs.forEach(value => indicesBlogs.push(value.blogId));
-  
-  return indicesBlogs
+  // var indicesBlogs = []
+  // listaBlogs.forEach(value => indicesBlogs.push(value.blogId));
+  // return indicesBlogs
 
 //   return new Promise(function(resolve, reject) {
 //     var examples = {};
@@ -81,11 +81,12 @@ exports.searchBlog = async function(query) {
  **/
 exports.searchBlogCategory = async function(category) {
   
-  let listaBlogs = Blogs.filter(cat => cat.category == category)
+  // let listaBlogs = 
+  return Blogs.filter(cat => cat.category == category)
 
-  var indicesBlogs = []
-  listaBlogs.forEach(value => indicesBlogs.push(value.blogId));
-  return indicesBlogs
+  // var indicesBlogs = []
+  // listaBlogs.forEach(value => indicesBlogs.push(value.blogId));
+  // return indicesBlogs
 
 //   return new Promise(function(resolve, reject) {
 //     var examples = {};

@@ -13,7 +13,12 @@ const { lastIndex } = require("methods");
  * no response value expected for this operation
  **/
 
-let Users = [{}]
+let Users = [{
+    "userId" : 0,
+    "password" : "supersecreto",
+    "email" : "berejena@coco.com",
+    "username" : "anacleto"
+  }]
 
 exports.createUser = async function (body) {
   if (Users.includes(body.userId) || Users.includes(body.username) ||
