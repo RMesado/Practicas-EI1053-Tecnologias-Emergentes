@@ -406,7 +406,7 @@
           if (document.getElementById('r3').checked) {
             categoria = document.getElementById('r3').value;
           }
-          this.numBlogs+=1
+          this.numBlogs += 1
           var blogData = { name: title, description: content, authorId: 0, category: categoria, blogId: this.numBlogs, tags: [] }
           //this.blogs.push(blogData)
 
@@ -424,7 +424,7 @@
             .then(function (data) { console.log(data) })
             .catch(function (error) { console.log(error) })
         },
-        loadUser(){
+        loadData() {
           var self = this
 
           fetch('/user/0')
@@ -434,10 +434,20 @@
               self.users.push(data)
             })
             .catch(function (error) { console.log(error) })
+
+          fetch('/blog?query=' + encodeURIComponent(this.query))
+            .then(function (r) { return r.json() })
+            .then(function (data) {
+              console.log(data)
+              self.blogs = data
+            })
+            .catch(function (error) { console.log(error) })
         }
+
+
       },
-      beforeMount(){
-        this.loadUser()
+      beforeMount() {
+        this.loadData()
       }
     })
   </script>
