@@ -30,7 +30,7 @@ paths:
       description: "Obtener datos de un usuario"
       operationId: "getUserData"
       produces:
-      - "application/json"
+      - "application/ld+json"
       parameters:
       - name: "userId"
         in: "path"
@@ -56,7 +56,7 @@ paths:
       description: "This can only be done by the logged in user."
       operationId: "createUser"
       produces:
-      - "application/json"
+      - "application/ld+json"
       parameters:
       - in: "body"
         name: "body"
@@ -76,7 +76,7 @@ paths:
       description: "Need credentials in body"
       operationId: "loginUser"
       produces:
-      - "application/json"
+      - "application/ld+json"
       parameters:
       - in: "body"
         name: "body"
@@ -109,7 +109,7 @@ paths:
       description: ""
       operationId: "logoutUser"
       produces:
-      - "application/json"
+      - "application/ld+json"
       parameters: []
       responses:
         default:
@@ -123,7 +123,7 @@ paths:
       description: "Busqueda mediante palabras clave"
       operationId: "searchBlog"
       produces:
-      - "application/json"
+      - "application/ld+json"
       parameters:
       - name: "query"
         in: "query"
@@ -146,9 +146,9 @@ paths:
       description: "Devuelve el ID del nuevo blog"
       operationId: "createBlog"
       consumes:
-      - "application/json"
+      - "application/ld+json"
       produces:
-      - "application/json"
+      - "application/ld+json"
       parameters:
       - in: "body"
         name: "body"
@@ -172,7 +172,7 @@ paths:
       description: "Busqueda mediante categoría"
       operationId: "searchBlogCategory"
       produces:
-      - "application/json"
+      - "application/ld+json"
       parameters:
       - name: "category"
         in: "path"
@@ -196,7 +196,7 @@ paths:
       description: "Devuelve la lista de posts de un blog"
       operationId: "getPosts"
       produces:
-      - "application/json"
+      - "application/ld+json"
       parameters:
       - name: "blogId"
         in: "path"
@@ -221,7 +221,7 @@ paths:
       description: "Se devuelve el ID del nuevo post."
       operationId: "createPost"
       produces:
-      - "application/json"
+      - "application/ld+json"
       parameters:
       - name: "blogId"
         in: "path"
@@ -270,10 +270,10 @@ definitions:
     type: "object"
     required:
     - "password"
+    - "username"
     properties:
-      userId:
-        type: "integer"
-        format: "int64"
+      username:
+        type: "string"
       password:
         type: "string"
   Blog:
@@ -294,19 +294,12 @@ definitions:
         format: "int64"
       category:
         type: "string"
-      tags:
-        type: "array"
-        items:
-          type: "string"
     example:
       name: "name"
       description: "description"
       authorId: 6
       category: "category"
       blogId: 0
-      tags:
-      - "tags"
-      - "tags"
   Post:
     type: "object"
     required:
