@@ -1,6 +1,5 @@
 'use strict';
-
-
+const mng = require('mongoose');
 /**
  * Añadir un blog a la colección
  * Devuelve el ID del nuevo blog
@@ -8,8 +7,36 @@
  * body Blog Metadatos del blog
  * returns Result
  **/
+
+const blogSchema = new mng.Schema({
+  "@context": String,
+        "@type": String,
+        "@id": Number,  // Aqui el id de blog
+        "headline": String,
+        "description": String,
+        "genre" : String,
+        "author": {
+              "@type": String,
+              "@id": Number // Aqui el id de autor.
+        }
+});
+var blogModel = mng.model('blog', blogSchema)
  let Blogs = []
 exports.createBlog = async function(body) {
+  var blog = new blogModel({
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": ,  // Aqui el id de blog
+    "headline": "Blog1",
+    "description": "p",
+    "genre" : body.genre,
+    "author": {
+          "@type": "Person",
+          "@id": "0" // Aqui el id de autor.
+    }
+  });
+
+  blog.save()
 
   Blogs.push(body)
   return Blogs[Blogs.length-1]
@@ -37,6 +64,8 @@ exports.createBlog = async function(body) {
  **/
 exports.searchBlog = async function(query) {
   query = query.trim().toLowerCase()
+
+  await blogModel.find
   
   // let listaBlogs = 
   return Blogs.filter(blog => blog.name.toLowerCase().includes(query) || 
