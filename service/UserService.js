@@ -14,11 +14,14 @@ const { lastIndex } = require("methods");
  **/
 
 let Users = [{
-    "userId" : 0,
-    "password" : "supersecreto",
-    "email" : "berejena@coco.com",
-    "username" : "anacleto"
-  }]
+  "@context": "https://schema.org",
+  "@type": ["Person", "DeliveryEvent"],
+  "@id": "",
+  "identifier": 0,
+  "accesCode": "supersecreto",
+  "email": "berejena@coco.com",
+  "name": "anacleto"
+}]
 
 exports.createUser = async function (body) {
   if (Users.includes(body.userId) || Users.includes(body.username) ||
@@ -30,7 +33,7 @@ exports.createUser = async function (body) {
     // });
   }
   Users.push(body)
-  return Users[Users.length-1]
+  return Users[Users.length - 1]
 }
 
 
@@ -43,7 +46,7 @@ exports.createUser = async function (body) {
  **/
 
 exports.getUserData = async function (userId) {
-  var indice = Users.findIndex(obj => obj.userId == userId);
+  var indice = Users.findIndex(obj => obj.identifier == userId);
   return Users[indice]
   //   return new Promise(function(resolve, reject) {
   //     var examples = {};

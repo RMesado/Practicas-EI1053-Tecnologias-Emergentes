@@ -189,13 +189,13 @@
             <h3 v-if="resultado!=''">Mostrando resultados de: {{resultado}}</h3>
             <li style="list-style-type:none" v-for="blog in blogs">
               <b-button block v-b-toggle="'collapse-'+blog.blogId" variant="outline-dark" class="mb-3"
-                style="text-align: left" @click="blogId=blog.blogId">{{blog.name}}</b-button>
+                style="text-align: left" @click="blogId=blog.blogId">{{blog.headline}}</b-button>
               <!-- @click="getPosts(blog.blogId)" -->
               <b-collapse :id="'collapse-'+blog.blogId" type="light" variant="light" size="lg">
                 <h5>{{blog.description}}</h5>
                 <a style="box-shadow: none" v-for="post in posts">
                   <template v-if="post.blogId==blog.blogId">
-                    <b-card :title="users[post.authorId].username+' dice:' " class="mb-3">
+                    <b-card :title="users[post.authorId].name+' dice:' " class="mb-3">
                       <b-card-text>{{post.text}}</b-card-text>
                     </b-card>
                   </template>
@@ -342,8 +342,8 @@
           var opts = {
             method: 'POST',
             headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
+              'Accept': 'application/ld+json',
+              'Content-Type': 'application/ld+json'
             },
             body: JSON.stringify(postData)
           }
@@ -372,7 +372,7 @@
           var username = document.getElementById("regUser")
           var email = document.getElementById("regEmail")
           var pass = document.getElementById("regContraseña")
-          let listaUsuarios = this.users.filter(u => u.username.toLowerCase().includes(username.value)
+          let listaUsuarios = this.users.filter(u => u.name.toLowerCase().includes(username.value)
             || u.email.toLowerCase().includes(email.value))
           var userData = { userId: this.users.length, password: pass.value, email: email.value, username: username.value }
 
@@ -385,8 +385,8 @@
             var opts = {
               method: 'POST',
               headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Accept': 'application/ld+json',
+                'Content-Type': 'application/ld+json'
               },
               body: JSON.stringify(userData)
             }
@@ -420,7 +420,7 @@
           if (document.getElementById('r3').checked) {
             categoria = document.getElementById('r3').value;
           }
-          var blogData = { name: title, description: content, authorId: 0, category: categoria, blogId: this.numBlogs, tags: [] }
+          var blogData = { name: title, description: content, authorId: 0, category: categoria, blogId: this.numBlogs}
           //this.blogs.push(blogData)
 
           var opts = {

@@ -22,7 +22,7 @@ tags:
 schemes:
 - "http"
 paths:
-  /user/{userId}:
+  /user/{identifier}:
     get:
       tags:
       - "user"
@@ -31,8 +31,9 @@ paths:
       operationId: "getUserData"
       produces:
       - "application/ld+json"
+      - "application/json"
       parameters:
-      - name: "userId"
+      - name: "identifier"
         in: "path"
         description: "ID del usuario"
         required: true
@@ -57,6 +58,7 @@ paths:
       operationId: "createUser"
       produces:
       - "application/ld+json"
+      - "application/json"
       parameters:
       - in: "body"
         name: "body"
@@ -77,6 +79,7 @@ paths:
       operationId: "loginUser"
       produces:
       - "application/ld+json"
+      - "application/json"
       parameters:
       - in: "body"
         name: "body"
@@ -110,6 +113,7 @@ paths:
       operationId: "logoutUser"
       produces:
       - "application/ld+json"
+      - "application/json"
       parameters: []
       responses:
         default:
@@ -124,6 +128,7 @@ paths:
       operationId: "searchBlog"
       produces:
       - "application/ld+json"
+      - "application/json"
       parameters:
       - name: "query"
         in: "query"
@@ -147,8 +152,10 @@ paths:
       operationId: "createBlog"
       consumes:
       - "application/ld+json"
+      - "application/json"
       produces:
       - "application/ld+json"
+      - "application/json"
       parameters:
       - in: "body"
         name: "body"
@@ -173,6 +180,7 @@ paths:
       operationId: "searchBlogCategory"
       produces:
       - "application/ld+json"
+      - "application/json"
       parameters:
       - name: "category"
         in: "path"
@@ -197,6 +205,7 @@ paths:
       operationId: "getPosts"
       produces:
       - "application/ld+json"
+      - "application/json"
       parameters:
       - name: "blogId"
         in: "path"
@@ -222,6 +231,7 @@ paths:
       operationId: "createPost"
       produces:
       - "application/ld+json"
+      - "application/json"
       parameters:
       - name: "blogId"
         in: "path"
@@ -252,7 +262,7 @@ definitions:
   User:
     type: "object"
     properties:
-      userId:
+      identifier:
         type: "integer"
         format: "int64"
       username:
@@ -262,7 +272,7 @@ definitions:
       password:
         type: "string"
     example:
-      userId: 0
+      identifier: 0
       password: "supersecreto"
       email: "berejena@coco.com"
       username: "anacleto"
