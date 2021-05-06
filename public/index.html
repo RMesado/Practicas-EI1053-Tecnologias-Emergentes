@@ -183,18 +183,19 @@
           <b-button type="submit" size="sm" class="my-2 my-sm-0">Buscar</button>
         </b-form>
       </div>
-      <b-container class="mt-2" v-show="blogs.length>0">
+      <b-container class="mt-2">
         <b-card>
           <ul style="list-style-type:none">
-            <h3 v-if="resultado!=''">Mostrando resultados de: {{resultado}}</h3>
+            <h3 v-if="tamResultado>0">Mostrando resultados de: {{resultado}}</h3>
+            <h3 v-else>Mostrando todos los blogs</h3>
             <li style="list-style-type:none" v-for="blog in blogs">
-              <b-button block v-b-toggle="'collapse-'+blog.blogId" variant="outline-dark" class="mb-3"
-                style="text-align: left" @click="blogId=blog.blogId">{{blog.headline}}</b-button>
+              <b-button block v-b-toggle="'collapse-'+blog.identifier" variant="outline-dark" class="mb-3"
+                style="text-align: left" @click="blogId=blog.identifier">{{blog.headline}}</b-button>
               <!-- @click="getPosts(blog.blogId)" -->
-              <b-collapse :id="'collapse-'+blog.blogId" type="light" variant="light" size="lg">
+              <b-collapse :id="'collapse-'+blog.identifier" type="light" variant="light" size="lg">
                 <h5>{{blog.description}}</h5>
                 <a style="box-shadow: none" v-for="post in posts">
-                  <template v-if="post.blogId==blog.blogId">
+                  <template v-if="post.identifier==blog.identifier">
                     <b-card :title="users[post.authorId].name+' dice:' " class="mb-3">
                       <b-card-text>{{post.text}}</b-card-text>
                     </b-card>
@@ -203,7 +204,7 @@
                 <b-card class="mb-3">
                   <b-form-group>
                     <b-form-input v-model.trim="post" placeholder="Añade un comentario"
-                      @keyup.enter="addPost(blog.blogId)+getPosts(blog.blogId)">
+                      @keyup.enter="addPost(blog.identifier)+getPosts(blog.identifier)">
                     </b-form-input>
                   </b-form-group>
                 </b-card>
@@ -228,6 +229,7 @@
         blogName: '',
         blogDesc: '',
         resultado: '',
+        tamResultado: 0,
         postId: -1,
         users: [
           // {
@@ -291,7 +293,8 @@
       methods: {
         searchBlogs() {
           var self = this
-          this.resultado = "'"+this.query+"'"
+          this.resultado = "'" + this.query + "'"
+          this.tamResultado = this.query.length
           fetch('/blog?query=' + encodeURIComponent(this.query))
             .then(function (r) { return r.json() })
             .then(function (data) {
@@ -313,6 +316,7 @@
               this.resultado = 'Estilo de vida'
               break;
           }
+          this.tamResultado = this.resultado.length
           fetch('/blog/' + encodeURIComponent(category))
             .then(function (r) { return r.json() })
             .then(function (data) {
@@ -342,8 +346,8 @@
           var opts = {
             method: 'POST',
             headers: {
-              'Accept': 'application/ld+json',
-              'Content-Type': 'application/ld+json'
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify(postData)
           }
@@ -363,7 +367,7 @@
             var data = JSON.parse(JSON.parse(event.data))
             //bytes to string -> string to json
             //console.log(data)
-            if (data.blogId == self.blogId)
+            if (data.identifier == self.identifier)
               self.posts.push(data)
           }, false)
         },
@@ -379,14 +383,14 @@
           if (listaUsuarios.length != 0) {
             alert("Usuario o correo ya existen")
           }
-          else {
-            this.users.push(userData);
+          // else {
+          //   this.users.push(userData);
 
             var opts = {
               method: 'POST',
               headers: {
-                'Accept': 'application/ld+json',
-                'Content-Type': 'application/ld+json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
               },
               body: JSON.stringify(userData)
             }
@@ -395,17 +399,17 @@
               .then(function (r) { return r.json() })
               .then(function (data) { console.log(data) })
               .catch(function (error) { console.log(error) })
-          }
+          },
 
           // Añadimos el nuevo usuario a la lista para las comprobaciones
-          fetch('/user/' + this.users.length)
-            .then(function (r) { return r.json() })
-            .then(function (data) {
-              console.log(data)
-              self.users.push(data)
-            })
-            .catch(function (error) { console.log(error) })
-        },
+        //   fetch('/user/' + this.users.length)
+        //     .then(function (r) { return r.json() })
+        //     .then(function (data) {
+        //       console.log(data)
+        //       self.users.push(data)
+        //     })
+        //     .catch(function (error) { console.log(error) })
+        // },
         createBlog() {
           var self = this
           var title = document.getElementById("titulo").value
@@ -420,7 +424,7 @@
           if (document.getElementById('r3').checked) {
             categoria = document.getElementById('r3').value;
           }
-          var blogData = { name: title, description: content, authorId: 0, category: categoria, blogId: this.numBlogs}
+          var blogData = { name: title, description: content, authorId: 0, category: categoria, blogId: this.numBlogs }
           //this.blogs.push(blogData)
 
           var opts = {

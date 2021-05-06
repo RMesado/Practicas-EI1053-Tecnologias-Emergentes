@@ -1,6 +1,7 @@
 'use strict';
 
 const { lastIndex } = require("methods");
+const mng = require('mongoose');
 
 // const { userInfo } = require("node:os");
 
@@ -12,6 +13,16 @@ const { lastIndex } = require("methods");
  * body User Crear un usuario
  * no response value expected for this operation
  **/
+const userSchema = new mng.Schema({
+  "@context": String,
+  "@type": Array,
+  "@id": String,
+  identifier: Number,
+  accesCode: String,
+  email: String,
+  name: String,
+});
+var userModel = mng.model('user', userSchema)
 
 let Users = [{
   "@context": "https://schema.org",
@@ -24,16 +35,26 @@ let Users = [{
 }]
 
 exports.createUser = async function (body) {
-  if (Users.includes(body.userId) || Users.includes(body.username) ||
-    Users.includes(body.email)) {
-    return "Id, username o email repetidos";
+  var user = new userModel({
+    "@context": "https://schema.org",
+    "@type": ["Person", "DeliveryEvent"],
+    "@id": body.userId + "",
+    identifier: body.userId,
+    accesCode: body.password,
+    email: body.email,
+    name: body.username,
+  });
 
-    // return new Promise(function(resolve, reject) {
-    //   resolve();
-    // });
-  }
-  Users.push(body)
+  user.save()
+  Users.push(user)
   return Users[Users.length - 1]
+  // if (Users.includes(body.userId) || Users.includes(body.username) ||
+  //   Users.includes(body.email)) {
+  //   return "Id, username o email repetidos";
+
+  // return new Promise(function(resolve, reject) {
+  //   resolve();
+  // });
 }
 
 

@@ -29,14 +29,14 @@ exports.createBlog = async function (body) {
   var blog = new blogModel({
     "@context": "https://schema.org",
     "@type": "Blog",
-    "@id": body.blogId+"",
+    "@id": body.blogId + "",
     identifier: body.blogId,
     headline: body.name,
     description: body.description,
     genre: body.category,
     author: {
       "@type": "Person",
-      "@id": body.authorId+"",
+      "@id": body.authorId + "",
       identifier: body.authorId // Aqui el id de autor.
     }
   });
@@ -70,10 +70,35 @@ exports.createBlog = async function (body) {
 exports.searchBlog = async function (query) {
   query = query.trim().toLowerCase()
 
-  // return await blogModel.(blog => blog.name.toLowerCase().includes(query) ||
-  // blog.description.toLowerCase().includes(query))
+  // Primero cargamos los blogs a la lista local, si ya están cargados, no hace falta
 
-  // let listaBlogs = 
+  if (Blogs.length == 0) {
+
+    await blogModel.find({}, function (err, task) {
+      if (err) {
+        console.log(err)
+      }
+      for (var i = 0; i < task.length; i++) {
+        Blogs.push({
+          _id: task[i]._id,
+          "@context": "https://schema.org",
+          "@type": "Blog",
+          "@id": task[i].identifier + "",
+          identifier: task[i].identifier,
+          headline: task[i].headline,
+          description: task[i].description,
+          genre: task[i].genre,
+          author: task[i].author
+        }
+        )
+      }
+      return Blogs
+    })
+
+  }
+
+  // Se hace la búsqueda en la lista local 
+
   return Blogs.filter(blog => blog.headline.toLowerCase().includes(query) ||
     blog.description.toLowerCase().includes(query) /*||
                               blog.category.toLowerCase().includes(query)*/)
