@@ -18,7 +18,7 @@ const userSchema = new mng.Schema({
   "@type": Array,
   "@id": String,
   identifier: Number,
-  accesCode: String,
+  accessCode: String,
   email: String,
   name: String,
 });
@@ -27,9 +27,9 @@ var userModel = mng.model('user', userSchema)
 let Users = [{
   "@context": "https://schema.org",
   "@type": ["Person", "DeliveryEvent"],
-  "@id": "",
+  "@id": "0",
   "identifier": 0,
-  "accesCode": "supersecreto",
+  "accessCode": "supersecreto",
   "email": "berejena@coco.com",
   "name": "anacleto"
 }]
@@ -40,14 +40,15 @@ exports.createUser = async function (body) {
     "@type": ["Person", "DeliveryEvent"],
     "@id": body.userId + "",
     identifier: body.userId,
-    accesCode: body.password,
+    accessCode: body.password,
     email: body.email,
     name: body.username,
   });
 
   user.save()
-  Users.push(user)
-  return Users[Users.length - 1]
+  return user
+  // Users.push(user)
+  // return Users[Users.length - 1]
   // if (Users.includes(body.userId) || Users.includes(body.username) ||
   //   Users.includes(body.email)) {
   //   return "Id, username o email repetidos";
@@ -67,8 +68,18 @@ exports.createUser = async function (body) {
  **/
 
 exports.getUserData = async function (userId) {
-  var indice = Users.findIndex(obj => obj.identifier == userId);
-  return Users[indice]
+  await userModel.find({ identifier: userId }, function (err, task) {
+    if (err) {
+      console.log(err)
+    }
+    if (task.length == 0) {
+      return 'No existe el usuario'
+    } else {
+      return task[0]
+    }
+  })
+  // var indice = Users.findIndex(obj => obj.identifier == userId);
+  // return Users[indice]
   //   return new Promise(function(resolve, reject) {
   //     var examples = {};
   //     examples['application/json'] = {
@@ -93,16 +104,28 @@ exports.getUserData = async function (userId) {
  * body Credentials Credenciales
  * returns String
  **/
-exports.loginUser = function (body) {
-  return new Promise(function (resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+exports.loginUser = async function (body) {
+  await userModel.find({name: body.username, accessCode: body.password}, function (err, task) {
+    if (err) {
+      console.log('printeo error: ', err)
     }
-  });
+    if (task.length == 0) {
+      console.log('no funca', task)
+      return false
+    } else {
+      return task[0]
+    }
+  })
+
+  // return new Promise(function (resolve, reject) {
+  //   var examples = {};
+  //   examples['application/json'] = "";
+  //   if (Object.keys(examples).length > 0) {
+  //     resolve(examples[Object.keys(examples)[0]]);
+  //   } else {
+  //     resolve();
+  //   }
+  // });
 }
 
 

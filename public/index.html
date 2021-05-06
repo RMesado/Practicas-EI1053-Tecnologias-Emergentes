@@ -44,9 +44,10 @@
           <b-nav-item-dropdown right>
             <!-- Using 'button-content' slot -->
             <template #button-content>
-              <em>Log in</em>
+              <em>Cuenta</em>
             </template>
-            <b-dropdown-item v-b-modal.modal-1>Iniciar Sesion</b-dropdown-item>
+            <b-dropdown-item v-if='!is_loged' v-b-modal.modal-1>Iniciar Sesion</b-dropdown-item>
+            <b-dropdown-item  v-else >{{this.username}}</b-dropdown-item>
             <b-modal id="modal-1" centered title="Iniciar Sesión" hide-footer>
               <div class="row justify-content-center">
                 <div>
@@ -56,18 +57,19 @@
                       <div class="tab-pane fade show active" id="pills-beneficiary" role="tabpanel"
                         aria-labelledby="pills-beneficiary-tab">
                         <div class="vue-template">
-                          <form>
+                          <form v-on:submit.prevent="">
                             <div class="form-group">
                               <h4>Usuario</h4>
-                              <input type="text" class="form-control form-control-lg" required />
+                              <input type="text" id="logUser" class="form-control form-control-lg" required />
                             </div>
 
                             <div class="form-group">
                               <h4>Contraseña</h4>
-                              <input type="password" class="form-control form-control-lg" required />
+                              <input type="password" id="logContraseña" class="form-control form-control-lg" required />
                             </div>
 
-                            <button type="submit" class="btn btn-dark btn-lg btn-block">Iniciar sesión</button>
+                            <button @click="loginUser()+$bvModal.hide('modal-1')"
+                              class="btn btn-dark btn-lg btn-block">Iniciar sesión</button>
 
                             <p class="forgot-password text-right">
                               ¿No tienes cuenta?
@@ -81,7 +83,8 @@
                 </div>
               </div>
             </b-modal>
-            <b-dropdown-item v-b-modal.modal-2>Regístrate</b-dropdown-item>
+            <b-dropdown-item  v-if='!is_loged' v-b-modal.modal-2>Regístrate</b-dropdown-item>
+            <b-dropdown-item  v-else @click='logout'>Cerrar sesión</b-dropdown-item>
             <b-modal id="modal-2" centered title="Regístrate" hide-footer>
               <div class="row justify-content-center">
                 <div>
@@ -196,16 +199,17 @@
                 <h5>{{blog.description}}</h5>
                 <a style="box-shadow: none" v-for="post in posts">
                   <template v-if="post.identifier==blog.identifier">
-                    <b-card :title="users[post.authorId].name+' dice:' " class="mb-3">
+                    <b-card :title="getUserData(post.authorId).name+' dice:' " class="mb-3">
                       <b-card-text>{{post.text}}</b-card-text>
                     </b-card>
                   </template>
                 </a>
                 <b-card class="mb-3">
                   <b-form-group>
-                    <b-form-input v-model.trim="post" placeholder="Añade un comentario"
+                    <b-form-input v-if='is_loged' v-model.trim="post" placeholder="Añade un comentario"
                       @keyup.enter="addPost(blog.identifier)+getPosts(blog.identifier)">
                     </b-form-input>
+                    <b-form-input v-else readonly placeholder="Debes estar logueado para comentar"></b-form-input>
                   </b-form-group>
                 </b-card>
               </b-collapse>
@@ -231,6 +235,7 @@
         resultado: '',
         tamResultado: 0,
         postId: -1,
+        is_loged: false,
         users: [
           // {
           //   "userId": 0,
@@ -386,22 +391,33 @@
           // else {
           //   this.users.push(userData);
 
-            var opts = {
-              method: 'POST',
-              headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(userData)
-            }
+          var opts = {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+          }
 
-            fetch('/user/', opts)
-              .then(function (r) { return r.json() })
-              .then(function (data) { console.log(data) })
-              .catch(function (error) { console.log(error) })
-          },
+          fetch('/user/', opts)
+            .then(function (r) { return r.json() })
+            .then(function (data) { console.log(data) })
+            .catch(function (error) { console.log(error) })
+        },
+        getUserData(userId) {
+          var self = this
 
-          // Añadimos el nuevo usuario a la lista para las comprobaciones
+          fetch('/user/' + userId)
+            .then(function (r) { return r.json() })
+            .then(function (data) {
+              console.log(data)
+              return data
+            })
+            .catch(function (error) { console.log(error) })
+        },
+
+        // Añadimos el nuevo usuario a la lista para las comprobaciones
         //   fetch('/user/' + this.users.length)
         //     .then(function (r) { return r.json() })
         //     .then(function (data) {
@@ -441,16 +457,47 @@
             .then(function (data) { console.log(data) })
             .catch(function (error) { console.log(error) })
         },
+        loginUser() {
+          var user = document.getElementById("logUser").value
+          var pass = document.getElementById("logContraseña").value
+          var loginData = { username: user, password: pass}
+
+          var opts = {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(loginData)
+          }
+
+          fetch('/user/login', opts)
+            .then(function (r) { return r.json() })
+            .then(function (data) {
+              conosole.log(data)
+              if (!data) {
+                alert("Usuario o contraseña incorrectos")
+              } else {
+                this.is_loged = true
+                this.username = data.name
+                this.userId = data.identifier
+              }
+            })
+            .catch(function (error) { console.log(error) })
+        },
+        logout(){
+          window.location.reload()
+        },
         loadData() {
           var self = this
 
-          fetch('/user/0')
-            .then(function (r) { return r.json() })
-            .then(function (data) {
-              console.log(data)
-              self.users.push(data)
-            })
-            .catch(function (error) { console.log(error) })
+          // fetch('/user/0')
+          //   .then(function (r) { return r.json() })
+          //   .then(function (data) {
+          //     console.log(data)
+          //     self.users.push(data)
+          //   })
+          //   .catch(function (error) { console.log(error) })
 
           fetch('/blog?query=' + encodeURIComponent(this.query))
             .then(function (r) { return r.json() })
