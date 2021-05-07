@@ -47,7 +47,7 @@
               <em>Cuenta</em>
             </template>
             <b-dropdown-item v-if='!is_loged' v-b-modal.modal-1>Iniciar Sesion</b-dropdown-item>
-            <b-dropdown-item  v-else >{{this.username}}</b-dropdown-item>
+            <b-dropdown-item v-else>{{this.username}}</b-dropdown-item>
             <b-modal id="modal-1" centered title="Iniciar Sesión" hide-footer>
               <div class="row justify-content-center">
                 <div>
@@ -83,8 +83,8 @@
                 </div>
               </div>
             </b-modal>
-            <b-dropdown-item  v-if='!is_loged' v-b-modal.modal-2>Regístrate</b-dropdown-item>
-            <b-dropdown-item  v-else @click='logout'>Cerrar sesión</b-dropdown-item>
+            <b-dropdown-item v-if='!is_loged' v-b-modal.modal-2>Regístrate</b-dropdown-item>
+            <b-dropdown-item v-else @click='logout'>Cerrar sesión</b-dropdown-item>
             <b-modal id="modal-2" centered title="Regístrate" hide-footer>
               <div class="row justify-content-center">
                 <div>
@@ -146,9 +146,15 @@
           </b-dropdown-item>
         </b-dropdown>
 
-        <b-button v-b-modal.modal-3 class="mb-2" style="float:right;">
+        <b-button v-if='is_loged' @click="$bvModal.show('modal-3')" class="mb-2" style="float:right;">
           <b-icon icon="pencil-square"></b-icon>
         </b-button>
+        <b-button v-else @click="showDismissibleAlert=true" style="float:right;">
+          <b-icon icon="pencil-square"></b-icon>
+        </b-button>
+        <b-alert variant="danger" dismissible fade :show="showDismissibleAlert" @dismissed="showDismissibleAlert=false">
+          Debes estar logueado para crear un blog
+        </b-alert>
 
         <b-modal id="modal-3" size="xl" title="Crear un blog" centered hide-footer hide-header>
           <div>
@@ -225,8 +231,8 @@
     window.app = new Vue({
       el: '#app',
       data: {
-        username: '', //nombre de usuario (no se usa)
-        userId: -1,
+        username: 'anacleto', //nombre de usuario (no se usa)
+        userId: 0,
         query: ' ', //búsqueda
         blogId: -1, //blog activado
         numBlogs: 0,
@@ -235,7 +241,8 @@
         resultado: '',
         tamResultado: 0,
         postId: -1,
-        is_loged: false,
+        is_loged: true,
+        showDismissibleAlert: false,
         users: [
           // {
           //   "userId": 0,
@@ -460,7 +467,7 @@
         loginUser() {
           var user = document.getElementById("logUser").value
           var pass = document.getElementById("logContraseña").value
-          var loginData = { username: user, password: pass}
+          var loginData = { username: user, password: pass }
 
           var opts = {
             method: 'POST',
@@ -475,7 +482,7 @@
             .then(function (r) { return r.json() })
             .then(function (data) {
               conosole.log(data)
-              if (!data) {
+              if (data.identifier == -1) {
                 alert("Usuario o contraseña incorrectos")
               } else {
                 this.is_loged = true
@@ -485,7 +492,7 @@
             })
             .catch(function (error) { console.log(error) })
         },
-        logout(){
+        logout() {
           window.location.reload()
         },
         loadData() {

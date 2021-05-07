@@ -104,7 +104,7 @@ exports.getUserData = async function (userId) {
  * body Credentials Credenciales
  * returns String
  **/
-exports.loginUser = async function (body) {
+ exports.loginUser = async function (body) {
   await userModel.find({name: body.username, accessCode: body.password}, function (err, task) {
     if (err) {
       console.log('printeo error: ', err)
@@ -116,7 +116,6 @@ exports.loginUser = async function (body) {
       return task[0]
     }
   })
-
   // return new Promise(function (resolve, reject) {
   //   var examples = {};
   //   examples['application/json'] = "";
