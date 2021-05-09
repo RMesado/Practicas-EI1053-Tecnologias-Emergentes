@@ -71,7 +71,7 @@ paths:
           description: "successful operation"
       x-swagger-router-controller: "User"
   /user/login:
-    post:
+    get:
       tags:
       - "user"
       summary: "Login"
@@ -265,17 +265,14 @@ definitions:
       identifier:
         type: "integer"
         format: "int64"
-      username:
+      name:
         type: "string"
       email:
         type: "string"
-      password:
-        type: "string"
     example:
       identifier: 0
-      password: "supersecreto"
       email: "berejena@coco.com"
-      username: "anacleto"
+      name: "anacleto"
   Credentials:
     type: "object"
     # required:

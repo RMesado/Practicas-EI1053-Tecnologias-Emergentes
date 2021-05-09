@@ -13,12 +13,19 @@
   "license": "Unlicense",
   "private": true,
   "dependencies": {
+    "axios": "^0.21.1",
     "body-parser": "^1.12.4",
+    "bootstrap-vue": "^2.21.2",
     "connect": "^3.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-sse": "^0.5.3",
     "js-yaml": "^3.3.0",
+    "lodash": "^4.17.21",
     "merge-descriptors": "^1.0.1",
+    "mongoose": "^5.12.7",
     "node-sessionstorage": "^1.0.0",
     "notifications": "^0.2.0",
-    "swagger-tools": "0.10.1"
+    "swagger-tools": "^0.10.4"
   }
 }

@@ -1,4 +1,5 @@
 'use strict';
+const mng = require('mongoose');
 
 
 /**
@@ -9,27 +10,62 @@
  * body Post Datos del Post
  * returns Result
  **/
- let Posts = []
+const postSchema = new mng.Schema({
+  "@context": String,
+  "@type": String,
+  "@id": String,
+  "identifier": Number, // Aqui el id de post
+  "text": String,
+  "blogId": {
+    "@type": String,
+    "@id": String,
+    "identifier": Number
+  },
+  "author": {
+    "@type": String,
+    "@id": String,
+    "identifier": Number // Aqui el id de autor.
+  }
+});
+var postModel = mng.model('post', postSchema)
+let Posts = []
 
-exports.createPost = async function(blogId,body) {
+exports.createPost = async function (blogId, body) {
+  if (blogId == body.blogId) {
+    var post = new postModel({
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "@id": body.postId,
+      "identifier": body.postId, // Aqui el id de post
+      "text": body.text,
+      "blogId": {
+        "@type": "Blog",
+        "@id": body.blogId,
+        "identifier": body.blogId
+      },
+      "author": {
+        "@type": "Person",
+        "@id": body.authorId,
+        "identifier": body.authorId, // Aqui el id de autor.
+      }
+    })
+    post.save()
+    Posts.push(post)
+    return { "identifier": Posts[Posts.length - 1].identifier }
+  } else
+    return { "identifier": -1 }
 
-  if (blogId == body.blogId){
-    Posts.push(body)
-    return {"id": Posts[Posts.length-1].id}
- } else
-    return {"id": -1}
-
-//   return new Promise(function(resolve, reject) {
-//     var examples = {};
-//     examples['application/json'] = {
-//   "id" : 0
-// };
-//     if (Object.keys(examples).length > 0) {
-//       resolve(examples[Object.keys(examples)[0]]);
-//     } else {
-//       resolve();
-//     }
-//   });
+  //   return new Promise(function(resolve, reject) {
+  //     var examples = {};
+  //     examples['application/json'] = {
+  //   "id" : 0
+  // };
+  //     if (Object.keys(examples).length > 0) {
+  //       resolve(examples[Object.keys(examples)[0]]);
+  //     } else {
+  //       resolve();
+  //     }
+  //   });
 }
 
 
@@ -40,29 +76,34 @@ exports.createPost = async function(blogId,body) {
  * blogId Long ID del blog
  * returns List
  **/
-exports.getPosts = async function(blogId) {
+exports.getPosts = async function (blogId) {
+  // await postModel.find({"blogId.identifier": blogId}, function(err, task){
+  //   if(err){
+  //     console.log("Printeando error: ", err)
+  //   }
+  //   return task
+  // })
+  return Posts.filter(post => post.blogId.identifier == blogId)
 
-  return Posts.filter(post => post.blogId == blogId)
 
-
-//   return new Promise(function(resolve, reject) {
-//     var examples = {};
-//     examples['application/json'] = [ {
-//   "postId" : 0,
-//   "text" : "text",
-//   "authorId" : 1,
-//   "blogId" : 6
-// }, {
-//   "postId" : 0,
-//   "text" : "text",
-//   "authorId" : 1,
-//   "blogId" : 6
-// } ];
-//     if (Object.keys(examples).length > 0) {
-//       resolve(examples[Object.keys(examples)[0]]);
-//     } else {
-//       resolve();
-//     }
-//   });
+  //   return new Promise(function(resolve, reject) {
+  //     var examples = {};
+  //     examples['application/json'] = [ {
+  //   "postId" : 0,
+  //   "text" : "text",
+  //   "authorId" : 1,
+  //   "blogId" : 6
+  // }, {
+  //   "postId" : 0,
+  //   "text" : "text",
+  //   "authorId" : 1,
+  //   "blogId" : 6
+  // } ];
+  //     if (Object.keys(examples).length > 0) {
+  //       resolve(examples[Object.keys(examples)[0]]);
+  //     } else {
+  //       resolve();
+  //     }
+  //   });
 }
 

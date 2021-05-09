@@ -46,6 +46,7 @@ exports.createUser = async function (body) {
   });
 
   user.save()
+  // Users.push(user)
   return user
   // Users.push(user)
   // return Users[Users.length - 1]
@@ -68,18 +69,43 @@ exports.createUser = async function (body) {
  **/
 
 exports.getUserData = async function (userId) {
-  await userModel.find({ identifier: userId }, function (err, task) {
-    if (err) {
-      console.log(err)
-    }
-    if (task.length == 0) {
-      return 'No existe el usuario'
-    } else {
-      return task[0]
-    }
-  })
-  // var indice = Users.findIndex(obj => obj.identifier == userId);
-  // return Users[indice]
+    var usuario
+    await userModel.find({ identifier: userId }, function (err, task) {
+      if (err) {
+        console.log(err)
+      }
+      if (task.length == 0) {
+        return 'No existe el usuario'
+      } else {
+        usuario = task[0]
+      }
+    })
+    return usuario
+  //   if (Users.length == 0) {
+  //     await userModel.find({}, function (err, task) {
+  //       if (err) {
+  //         console.log(err)
+  //       }
+  //       for (var i = 0; i < task.length; i++) {
+  //         Users.push({
+  //           _id: task[i]._id,
+  //           "@context": "https://schema.org",
+  //           "@type": ["Person", "DeliveryEvent"],
+  //           "@id": task[i].identifier + "",
+  //           identifier: task[i].identifier,
+  //           name: task[i].name,
+  //           email: task[i].email,
+  //           accessCode: task[i].accessCode
+  //         })
+  //       }
+  //       return Users[Users.findIndex(obj => obj.identifier == userId)]
+  //     })
+  //   } else {
+  //     var indice = Users.findIndex(obj => obj.identifier == userId);
+  //     return Users[indice]
+  //   }
+  // }
+  }
   //   return new Promise(function(resolve, reject) {
   //     var examples = {};
   //     examples['application/json'] = {
@@ -94,7 +120,6 @@ exports.getUserData = async function (userId) {
   //       resolve();
   //     }
   //   });
-}
 
 
 /**
@@ -104,18 +129,20 @@ exports.getUserData = async function (userId) {
  * body Credentials Credenciales
  * returns String
  **/
- exports.loginUser = async function (body) {
-  await userModel.find({name: body.username, accessCode: body.password}, function (err, task) {
+exports.loginUser = async function (body) {
+  var usuario
+  await userModel.find({ name: body.username, accessCode: body.password }, function (err, task) {
     if (err) {
       console.log('printeo error: ', err)
     }
     if (task.length == 0) {
       console.log('no funca', task)
-      return false
+      usuario = false
     } else {
-      return task[0]
+      usuario = task[0]
     }
   })
+  return usuario
   // return new Promise(function (resolve, reject) {
   //   var examples = {};
   //   examples['application/json'] = "";

@@ -15,16 +15,19 @@
 {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
-        "@id": "0",  // Aqui el id de post
+        "@id": "0",
+        "identifier": 0, 
         "text": "texto",
-        "identifier" : {
+        "blogId" : {
                 "@type": "Blog",
-                "@id": "0"
+                "@id": "0",
+                "identifier": 0
         },
         "author": {
               "@type": "Person",
-              "@id": "0", // Aqui el id de autor.
-              "name": "Rafael"   // Nombre de autor.
+              "@id": "0",
+              "identifier": 0,
+              "name": "Rafael"
         }
 }
 
