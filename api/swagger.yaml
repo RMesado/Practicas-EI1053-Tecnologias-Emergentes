@@ -71,7 +71,7 @@ paths:
           description: "successful operation"
       x-swagger-router-controller: "User"
   /user/login:
-    get:
+    post:
       tags:
       - "user"
       summary: "Login"

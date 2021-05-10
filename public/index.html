@@ -66,7 +66,7 @@
                                 <input type="password" id="logContraseña" class="form-control form-control-lg" required />
                               </div>
 
-                              <button @click="loginUser()+$bvModal.hide('modal-1')" class="btn btn-dark btn-lg btn-block">Iniciar sesión</button>
+                              <b-button @click="loginUser()+$bvModal.hide('modal-1')" class="btn btn-dark btn-lg btn-block">Iniciar sesión</b-button>
 
                               <p class="forgot-password text-right">
                                 ¿No tienes cuenta?
@@ -218,8 +218,8 @@
     window.app = new Vue({
       el: '#app',
       data: {
-        username: 'anacleto', //nombre de usuario (no se usa)
-        userId: 0,
+        username: '', //nombre de usuario (no se usa)
+        userId: -1,
         query: ' ', //búsqueda
         blogId: -1, //blog activado
         numBlogs: 0,
@@ -228,7 +228,7 @@
         resultado: '',
         tamResultado: 0,
         postId: -1,
-        is_loged: true,
+        is_loged: false,
         user_post_name: '',
         showDismissibleAlert: false,
         users: [
@@ -403,9 +403,11 @@
           var self = this
 
           fetch('/user/' + userId)
-            .then(function (r) { return r.json() })
+            .then(function (r) { 
+              console.log(r)
+              return r.json() })
             .then(function (data) {
-              console.log("usuario obtienido: ",data)
+              // console.log("usuario obtienido: ",data)
               self.users.push(data)
             })
             .catch(function (error) { console.log(error) })
@@ -452,6 +454,7 @@
             .catch(function (error) { console.log(error) })
         },
         loginUser() {
+          var self = this
           var user = document.getElementById("logUser").value
           var pass = document.getElementById("logContraseña").value
           var loginData = { username: user, password: pass }
@@ -468,13 +471,13 @@
           fetch('/user/login', opts)
             .then(function (r) { return r.json() })
             .then(function (data) {
-              conosole.log(data)
+              console.log(data)
               if (data.identifier == -1) {
                 alert("Usuario o contraseña incorrectos")
               } else {
-                this.is_loged = true
-                this.username = data.name
-                this.userId = data.identifier
+                self.is_loged = true
+                self.username = data.name
+                self.userId = data.identifier
               }
             })
             .catch(function (error) { console.log(error) })
@@ -492,6 +495,17 @@
           //     self.users.push(data)
           //   })
           //   .catch(function (error) { console.log(error) })
+          this.getUserData(0)
+          var i = 0
+          let usuario = self.users[i]
+          
+          while(usuario.identifier!=-1){
+            i++
+            this.getUserData(i)
+            usuario = self.users[i]
+          }
+          self.users.splice(i,1)
+
 
           fetch('/blog?query=' + encodeURIComponent(this.query))
             .then(function (r) { return r.json() })
@@ -515,8 +529,8 @@
             .catch(function (error) { console.log(error) })
         }
       },
-      async beforeMount() {
-        this.getUserData(0)
+      mounted() {
+        // this.getUserData(0)
         this.loadData()
       }
     })

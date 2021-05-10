@@ -1,10 +1,9 @@
-'use strict';
+"use strict";
 
 const { lastIndex } = require("methods");
-const mng = require('mongoose');
+const mng = require("mongoose");
 
 // const { userInfo } = require("node:os");
-
 
 /**
  * Crea un usuario
@@ -22,17 +21,19 @@ const userSchema = new mng.Schema({
   email: String,
   name: String,
 });
-var userModel = mng.model('user', userSchema)
+var userModel = mng.model("user", userSchema);
 
-let Users = [{
-  "@context": "https://schema.org",
-  "@type": ["Person", "DeliveryEvent"],
-  "@id": "0",
-  "identifier": 0,
-  "accessCode": "supersecreto",
-  "email": "berejena@coco.com",
-  "name": "anacleto"
-}]
+let Users = [
+  {
+    "@context": "https://schema.org",
+    "@type": ["Person", "DeliveryEvent"],
+    "@id": "0",
+    identifier: 0,
+    accessCode: "supersecreto",
+    email: "berejena@coco.com",
+    name: "anacleto",
+  },
+];
 
 exports.createUser = async function (body) {
   var user = new userModel({
@@ -45,9 +46,9 @@ exports.createUser = async function (body) {
     name: body.username,
   });
 
-  user.save()
+  user.save();
   // Users.push(user)
-  return user
+  return user;
   // Users.push(user)
   // return Users[Users.length - 1]
   // if (Users.includes(body.userId) || Users.includes(body.username) ||
@@ -57,8 +58,7 @@ exports.createUser = async function (body) {
   // return new Promise(function(resolve, reject) {
   //   resolve();
   // });
-}
-
+};
 
 /**
  * Consulta un usuario
@@ -69,18 +69,20 @@ exports.createUser = async function (body) {
  **/
 
 exports.getUserData = async function (userId) {
-    var usuario
-    await userModel.find({ identifier: userId }, function (err, task) {
-      if (err) {
-        console.log(err)
-      }
-      if (task.length == 0) {
-        return 'No existe el usuario'
-      } else {
-        usuario = task[0]
-      }
-    })
-    return usuario
+  var usuario;
+  let task = await userModel.find({ identifier: userId })
+  // {
+  //   if (err) {
+  //     console.log(err);
+  //   }
+    
+  if (task.length == 0) {
+      usuario = {identifier: -1};
+    } else {
+      usuario = task[0];
+    }
+
+  return usuario;
   //   if (Users.length == 0) {
   //     await userModel.find({}, function (err, task) {
   //       if (err) {
@@ -105,22 +107,21 @@ exports.getUserData = async function (userId) {
   //     return Users[indice]
   //   }
   // }
-  }
-  //   return new Promise(function(resolve, reject) {
-  //     var examples = {};
-  //     examples['application/json'] = {
-  //   "userId" : 0,
-  //   "password" : "supersecreto",
-  //   "email" : "berejena@coco.com",
-  //   "username" : "anacleto"
-  // };
-  //     if (Object.keys(examples).length > 0) {
-  //       resolve(examples[Object.keys(examples)[0]]);
-  //     } else {
-  //       resolve();
-  //     }
-  //   });
-
+};
+//   return new Promise(function(resolve, reject) {
+//     var examples = {};
+//     examples['application/json'] = {
+//   "userId" : 0,
+//   "password" : "supersecreto",
+//   "email" : "berejena@coco.com",
+//   "username" : "anacleto"
+// };
+//     if (Object.keys(examples).length > 0) {
+//       resolve(examples[Object.keys(examples)[0]]);
+//     } else {
+//       resolve();
+//     }
+//   });
 
 /**
  * Login
@@ -130,19 +131,24 @@ exports.getUserData = async function (userId) {
  * returns String
  **/
 exports.loginUser = async function (body) {
-  var usuario
-  await userModel.find({ name: body.username, accessCode: body.password }, function (err, task) {
-    if (err) {
-      console.log('printeo error: ', err)
+  var usuario;
+  let task = await userModel.find(
+    { name: body.username, accessCode: body.password }) 
+  
+    // function (err, task) {
+    //   if (err) {
+    //     console.log("printeo error: ", err);
+    //   }
+      if (task.length == 0) {
+        console.log("no funca", task);
+        usuario = { identifier: -1 };
+      } else {
+        // console.log("Ha hecho el login bien: ", task[0]);
+        usuario = task[0];
+      }
+      return usuario;
     }
-    if (task.length == 0) {
-      console.log('no funca', task)
-      usuario = false
-    } else {
-      usuario = task[0]
-    }
-  })
-  return usuario
+  
   // return new Promise(function (resolve, reject) {
   //   var examples = {};
   //   examples['application/json'] = "";
@@ -152,12 +158,11 @@ exports.loginUser = async function (body) {
   //     resolve();
   //   }
   // });
-}
 
 
 /**
  * Logs out current logged in user session
- * 
+ *
  *
  * no response value expected for this operation
  **/
@@ -165,4 +170,4 @@ exports.logoutUser = function () {
   return new Promise(function (resolve, reject) {
     resolve();
   });
-}
+};

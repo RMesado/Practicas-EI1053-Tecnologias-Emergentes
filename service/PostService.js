@@ -77,13 +77,12 @@ exports.createPost = async function (blogId, body) {
  * returns List
  **/
 exports.getPosts = async function (blogId) {
-  // await postModel.find({"blogId.identifier": blogId}, function(err, task){
+  let task = await postModel.find({"blogId.identifier": blogId})
   //   if(err){
   //     console.log("Printeando error: ", err)
   //   }
-  //   return task
-  // })
-  return Posts.filter(post => post.blogId.identifier == blogId)
+  return task
+  // return Posts.filter(post => post.blogId.identifier == blogId)
 
 
   //   return new Promise(function(resolve, reject) {
