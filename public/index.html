@@ -192,10 +192,12 @@
                 <b-collapse :id="'collapse-'+blog.identifier" type="light" variant="light" size="lg">
                   <h5>{{blog.description}}</h5>
                   <a style="box-shadow: none" v-for="post in posts">
-                    <template v-if="post.blogId.identifier==blog.identifier">
-                      <b-card :title="users[post.author.identifier].name+' dice:' " class="mb-3">
-                        <b-card-text>{{post.text}}</b-card-text>
-                      </b-card>
+                    <p>getUserData("post.author.identifier")</p>
+                      <p>{{users}}</p>
+                      <template v-if="post.blogId.identifier==blog.identifier">
+                        <b-card :title="users['user-'+post.author.identifier]+' dice:' " class="mb-3">
+                          <b-card-text>{{post.text}}</b-card-text>
+                        </b-card>
                     </template>
                   </a>
                   <b-card class="mb-3">
@@ -231,7 +233,7 @@
         is_loged: false,
         user_post_name: '',
         showDismissibleAlert: false,
-        users: [
+        users: {}
           // {
           //   "userId": 0,
           //   "password": "supersecreto",
@@ -244,7 +246,7 @@
           //   "email": "nabos@4ever.com",
           //   "username": "nabocop"
           // }
-        ],
+        ,
         blogs: [
           // {
           //   "name": "Comida con nabos",
@@ -399,16 +401,14 @@
             .then(function (data) { console.log(data) })
             .catch(function (error) { console.log(error) })
         },
-        getUserData(userId) {
+        async getUserData(userId) {
           var self = this
 
-          fetch('/user/' + userId)
-            .then(function (r) { 
-              console.log(r)
-              return r.json() })
+          await fetch('/user/' + userId)
+            .then(function (r) { return r.json() })
             .then(function (data) {
               // console.log("usuario obtienido: ",data)
-              self.users.push(data)
+              self.users["user-"+data.identifier] = data
             })
             .catch(function (error) { console.log(error) })
         },
@@ -495,16 +495,19 @@
           //     self.users.push(data)
           //   })
           //   .catch(function (error) { console.log(error) })
-          this.getUserData(0)
-          var i = 0
-          let usuario = self.users[i]
+          // let usuario
+          // this.getUserData(0)
+          // console.log(self.users)
+          // var i = 0
+          // console.log("Usuario 0: ", self.users[0])
+          // let usuario = self.users[i]
           
-          while(usuario.identifier!=-1){
-            i++
-            this.getUserData(i)
-            usuario = self.users[i]
-          }
-          self.users.splice(i,1)
+          // while(usuario.identifier!=-1){
+          //   i++
+          //   this.getUserData(i)
+          //   usuario = self.users[i]
+          // }
+          // self.users.splice(i,1)
 
 
           fetch('/blog?query=' + encodeURIComponent(this.query))
@@ -521,6 +524,7 @@
                     console.log(data)
                     for (var j = 0; j < data.length; j++) {
                       self.posts.push(data[j])
+                      // self.getUserData(data[j].author.identifier)
                     }
                   })
                   .catch(function (error) { console.log(error) })
@@ -529,7 +533,7 @@
             .catch(function (error) { console.log(error) })
         }
       },
-      mounted() {
+      beforeMount() {
         // this.getUserData(0)
         this.loadData()
       }
