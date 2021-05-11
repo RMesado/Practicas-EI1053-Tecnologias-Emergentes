@@ -15,8 +15,8 @@ module.exports.createUser = function createUser (req, res, next) {
 };
 
 module.exports.getUserData = function getUserData (req, res, next) {
-  var userId = req.swagger.params['identifier'].value;
-  User.getUserData(userId)
+  // var userId = req.swagger.params['identifier'].value;
+  User.getUserData()
     .then(function (response) {
       utils.writeJson(res, response);
     })

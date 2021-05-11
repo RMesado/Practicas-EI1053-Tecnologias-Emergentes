@@ -72,31 +72,8 @@ exports.searchBlog = async function (query) {
 
   // Primero cargamos los blogs a la lista local, si ya están cargados, no hace falta
 
-  if (Blogs.length == 0) {
-
-    await blogModel.find({}, function (err, task) {
-      if (err) {
-        console.log(err)
-      }
-      for (var i = 0; i < task.length; i++) {
-        Blogs.push({
-          _id: task[i]._id,
-          "@context": "https://schema.org",
-          "@type": "Blog",
-          "@id": task[i].identifier + "",
-          identifier: task[i].identifier,
-          headline: task[i].headline,
-          description: task[i].description,
-          genre: task[i].genre,
-          author: task[i].author
-        }
-        )
-      }
-      return Blogs
-    })
-
-  }
-
+  let task = await blogModel.find({})
+  Blogs = task
   // Se hace la búsqueda en la lista local 
 
   return Blogs.filter(blog => blog.headline.toLowerCase().includes(query) ||

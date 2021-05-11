@@ -1,227 +1,237 @@
 <html lang="en">
 
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
-    <title>SelFit - Do IT yourself</title>
+  <title>SelFit - Do IT yourself</title>
 
-    <!-- Required Stylesheets -->
-    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
-    <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
+  <!-- Required Stylesheets -->
+  <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+  <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
 
-    <!-- Required scripts -->
-    <script src="https://unpkg.com/vue"></script>
-    <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+  <!-- Required scripts -->
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+  <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
 
-    <!-- Load Vue followed by BootstrapVueIcons -->
-    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
-  </head>
+  <!-- Load Vue followed by BootstrapVueIcons -->
+  <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+</head>
 
-  <body>
-    <div id="app">
-      <b-navbar toggleable="lg" type="dark" variant="dark">
-        <b-navbar-brand>SelFit©</b-navbar-brand>
+<body>
+  <div id="app">
+    <b-navbar toggleable="lg" type="dark" variant="dark">
+      <b-navbar-brand>SelFit©</b-navbar-brand>
 
-        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-        <b-collapse id="nav-collapse" is-nav>
-          <b-navbar-nav>
-            <b-nav-item href="http://localhost:9000/web/">Home</b-nav-item>
-          </b-navbar-nav>
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item href="http://localhost:9000/web/">Home</b-nav-item>
+        </b-navbar-nav>
 
-          <!-- Right aligned nav items -->
-          <b-navbar-nav class="ml-auto">
-            <!-- <b-nav-form>
+        <!-- Right aligned nav items -->
+        <b-navbar-nav class="ml-auto">
+          <!-- <b-nav-form>
             <b-form-input size="sm" class="mr-sm-2" placeholder="Buscar posts"></b-form-input>
             <b-button size="sm" class="my-2 my-sm-0" type="submit">Buscar</b-button>
           </b-nav-form> -->
 
-            <b-nav-item-dropdown right>
-              <!-- Using 'button-content' slot -->
-              <template #button-content>
-                <em>Cuenta</em>
-              </template>
-              <b-dropdown-item v-if='!is_loged' v-b-modal.modal-1>Iniciar Sesion</b-dropdown-item>
-              <b-dropdown-item v-else>{{this.username}}</b-dropdown-item>
-              <b-modal id="modal-1" centered title="Iniciar Sesión" hide-footer>
-                <div class="row justify-content-center">
-                  <div>
+          <b-nav-item-dropdown right>
+            <!-- Using 'button-content' slot -->
+            <template #button-content>
+              <em>Cuenta</em>
+            </template>
+            <b-dropdown-item v-if='!is_loged' v-b-modal.modal-1>Iniciar Sesion</b-dropdown-item>
+            <b-dropdown-item v-else>{{this.username}}</b-dropdown-item>
+            <b-modal id="modal-1" centered title="Iniciar Sesión" hide-footer>
+              <div class="row justify-content-center">
+                <div>
 
-                    <div class="card-body">
-                      <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="pills-beneficiary" role="tabpanel" aria-labelledby="pills-beneficiary-tab">
-                          <div class="vue-template">
-                            <form v-on:submit.prevent="">
-                              <div class="form-group">
-                                <h4>Usuario</h4>
-                                <input type="text" id="logUser" class="form-control form-control-lg" required />
-                              </div>
+                  <div class="card-body">
+                    <div class="tab-content" id="pills-tabContent">
+                      <div class="tab-pane fade show active" id="pills-beneficiary" role="tabpanel"
+                        aria-labelledby="pills-beneficiary-tab">
+                        <div class="vue-template">
+                          <form v-on:submit.prevent="">
+                            <div class="form-group">
+                              <h4>Usuario</h4>
+                              <input type="text" id="logUser" class="form-control form-control-lg" required />
+                            </div>
 
-                              <div class="form-group">
-                                <h4>Contraseña</h4>
-                                <input type="password" id="logContraseña" class="form-control form-control-lg" required />
-                              </div>
+                            <div class="form-group">
+                              <h4>Contraseña</h4>
+                              <input type="password" id="logContraseña" class="form-control form-control-lg" required />
+                            </div>
 
-                              <b-button @click="loginUser()+$bvModal.hide('modal-1')" class="btn btn-dark btn-lg btn-block">Iniciar sesión</b-button>
+                            <button @click="loginUser()+$bvModal.hide('modal-1')"
+                              class="btn btn-dark btn-lg btn-block">Iniciar sesión</button>
 
-                              <p class="forgot-password text-right">
-                                ¿No tienes cuenta?
-                                <b-link v-b-modal.modal-2 @click="$bvModal.hide('modal-1')"> Regístrate</b-link>
-                              </p>
-                            </form>
-                          </div>
+                            <p class="forgot-password text-right">
+                              ¿No tienes cuenta?
+                              <b-link v-b-modal.modal-2 @click="$bvModal.hide('modal-1')"> Regístrate</b-link>
+                            </p>
+                          </form>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </b-modal>
-              <b-dropdown-item v-if='!is_loged' v-b-modal.modal-2>Regístrate</b-dropdown-item>
-              <b-dropdown-item v-else @click='logout'>Cerrar sesión</b-dropdown-item>
-              <b-modal id="modal-2" centered title="Regístrate" hide-footer>
-                <div class="row justify-content-center">
-                  <div>
-                    <div class="card-body">
-                      <div class="tab-content">
-                        <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="pills-beneficiary-tab">
-                          <div class="vue-template">
-                            <form id="registerForm" v-on:submit.prevent="">
-                              <div class="form-group">
-                                <h4>Usuario</h4>
-                                <input type="text" id="regUser" name="usuario" class="form-control form-control-lg" required />
-                              </div>
-                              <div class="form-group">
-                                <h4>Email</h4>
-                                <input type="text" id="regEmail" name="regEmail" class="form-control form-control-lg" required />
-                              </div>
-                              <div class="form-group">
-                                <h4>Contraseña</h4>
-                                <input type="password" id="regContraseña" name="regContraseña" class="form-control form-control-lg" required />
-                              </div>
-                              <button @click="createUser()+$bvModal.hide('modal-2')" class="btn btn-dark btn-lg btn-block">Regístrate</button>
+              </div>
+            </b-modal>
+            <b-dropdown-item v-if='!is_loged' v-b-modal.modal-2>Regístrate</b-dropdown-item>
+            <b-dropdown-item v-else @click='logout'>Cerrar sesión</b-dropdown-item>
+            <b-modal id="modal-2" centered title="Regístrate" hide-footer>
+              <div class="row justify-content-center">
+                <div>
+                  <div class="card-body">
+                    <div class="tab-content">
+                      <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="pills-beneficiary-tab">
+                        <div class="vue-template">
+                          <form id="registerForm" v-on:submit.prevent="">
+                            <div class="form-group">
+                              <h4>Usuario</h4>
+                              <input type="text" id="regUser" name="usuario" class="form-control form-control-lg"
+                                required />
+                            </div>
+                            <div class="form-group">
+                              <h4>Email</h4>
+                              <input type="text" id="regEmail" name="regEmail" class="form-control form-control-lg"
+                                required />
+                            </div>
+                            <div class="form-group">
+                              <h4>Contraseña</h4>
+                              <input type="password" id="regContraseña" name="regContraseña"
+                                class="form-control form-control-lg" required />
+                            </div>
+                            <button @click="createUser()+$bvModal.hide('modal-2')+getUserData()"
+                              class="btn btn-dark btn-lg btn-block">Regístrate</button>
 
-                              <p class="forgot-password text-right">
-                                ¿Ya tienes cuenta?
-                                <b-link v-b-modal.modal-1 @click="$bvModal.hide('modal-2')"> Inicia Sesión</b-link>
-                              </p>
-                            </form>
-                          </div>
+                            <p class="forgot-password text-right">
+                              ¿Ya tienes cuenta?
+                              <b-link v-b-modal.modal-1 @click="$bvModal.hide('modal-2')"> Inicia Sesión</b-link>
+                            </p>
+                          </form>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </b-modal>
-            </b-nav-item-dropdown>
-          </b-navbar-nav>
-        </b-collapse>
-      </b-navbar>
+              </div>
+            </b-modal>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
 
-      <b-container class="mt-4">
-        <div>
-          <b-dropdown text="Categorías" right class="mb-2">
-            <!-- <b-form-button v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="comida"> -->
-            <b-dropdown-item @click="searchBlogsCategory('comida')" name="categoria" value="comida">
-              Alimentación
-            </b-dropdown-item>
+    <b-container class="mt-4">
+      <div>
+        <b-dropdown text="Categorías" right class="mb-2">
+          <!-- <b-form-button v-model="selected" :aria-describedby="ariaDescribedby" name="some-radios" value="comida"> -->
+          <b-dropdown-item @click="searchBlogsCategory('comida')" name="categoria" value="comida">
+            Alimentación
+          </b-dropdown-item>
 
-            <b-dropdown-item @click="searchBlogsCategory('ejercicio')" name="categoria" value="ejercicio">
-              Ejercicio
-            </b-dropdown-item>
+          <b-dropdown-item @click="searchBlogsCategory('ejercicio')" name="categoria" value="ejercicio">
+            Ejercicio
+          </b-dropdown-item>
 
-            <b-dropdown-item @click="searchBlogsCategory('estilo')" name="categoria" value="estilo">
-              Estilo de vida
-            </b-dropdown-item>
-          </b-dropdown>
+          <b-dropdown-item @click="searchBlogsCategory('estilo')" name="categoria" value="estilo">
+            Estilo de vida
+          </b-dropdown-item>
+        </b-dropdown>
 
-          <b-button v-if='is_loged' @click="$bvModal.show('modal-3')" class="mb-2" style="float:right;">
-            <b-icon icon="pencil-square"></b-icon>
-          </b-button>
-          <b-button v-else @click="showDismissibleAlert=true" style="float:right;">
-            <b-icon icon="pencil-square"></b-icon>
-          </b-button>
-          <b-alert variant="danger" dismissible fade :show="showDismissibleAlert" @dismissed="showDismissibleAlert=false">
-            Debes estar logueado para crear un blog
-          </b-alert>
+        <b-button v-if='is_loged' @click="$bvModal.show('modal-3')" class="mb-2" style="float:right;">
+          <b-icon icon="pencil-square"></b-icon>
+        </b-button>
+        <b-button v-else @click="showDismissibleAlert=true" style="float:right;">
+          <b-icon icon="pencil-square"></b-icon>
+        </b-button>
+        <b-alert variant="danger" dismissible fade :show="showDismissibleAlert" @dismissed="showDismissibleAlert=false">
+          Debes estar logueado para crear un blog
+        </b-alert>
 
-          <b-modal id="modal-3" size="xl" title="Crear un blog" centered hide-footer hide-header>
-            <div>
-              <h3>Crear un blog</h3>
-            </div>
-            <div class="form-group">
-              <label for="Titulo">Título</label>
-              <input type="text" class="form-control" id="titulo" placeholder="Escribe un título.">
-            </div>
+        <b-modal id="modal-3" size="xl" title="Crear un blog" centered hide-footer hide-header>
+          <div>
+            <h3>Crear un blog</h3>
+          </div>
+          <div class="form-group">
+            <label for="Titulo">Título</label>
+            <input type="text" class="form-control" id="titulo" placeholder="Escribe un título." />
+          </div>
 
-            <div>
-              <b-form-group label="Categoría:" v-slot="{ ariaDescribedby }">
-                <b-form-radio-group id="radios" name="radio-sub-component">
-                  <b-form-radio id="r1" name="categoria" value="comida">Comida</b-form-radio>
-                  <b-form-radio id="r2" name="categoria" value="ejercicio">Ejercicio</b-form-radio>
-                  <b-form-radio id="r3" name="categoria" value="estilo">Estilo de vida</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-            </div>
-            <div class="form-group">
-              <label for="Textarea">Contenido</label>
-              <textarea class="form-control" id="contenidoPost" rows="15"></textarea>
-            </div>
+          <div>
+            <b-form-group label="Categoría:" v-slot="{ ariaDescribedby }">
+              <b-form-radio-group id="radios" name="radio-sub-component">
+                <b-form-radio id="r1" name="categoria" value="comida">Comida</b-form-radio>
+                <b-form-radio id="r2" name="categoria" value="ejercicio">Ejercicio</b-form-radio>
+                <b-form-radio id="r3" name="categoria" value="estilo">Estilo de vida</b-form-radio>
+              </b-form-radio-group>
+            </b-form-group>
+          </div>
+          <div class="form-group">
+            <label for="Textarea">Contenido</label>
+            <textarea class="form-control" id="contenidoPost" rows="15"></textarea>
+          </div>
 
-            <button @click="$bvModal.hide('modal-3')" class="btn btn-dark btn-lg" style="float:right; margin:5px">Cancelar</button>
-            <button @click="createBlog()+$bvModal.hide('modal-3')+loadData()" class="btn btn-dark btn-lg" style="float:right; margin:5px">Crear</button>
+          <button @click="$bvModal.hide('modal-3')" class="btn btn-dark btn-lg"
+            style="float:right; margin:5px">Cancelar</button>
+          <button @click="createBlog()+$bvModal.hide('modal-3')+loadData()" class="btn btn-dark btn-lg"
+            style="float:right; margin:5px">Crear</button>
 
-          </b-modal>
+        </b-modal>
 
-          <b-form @submit="searchBlogs" class="input-group" v-on:submit.prevent="">
-            <b-form-input v-model.trim="query" size="sm" class="mr-sm-2" placeholder="Buscar posts" @keyup.enter="searchBlogs"></b-form-input>
-            <b-button type="submit" size="sm" class="my-2 my-sm-0">Buscar</b-button>
-          </b-form>
-        </div>
-        <b-container class="mt-2">
-          <b-card>
-            <ul style="list-style-type:none">
-              <h3 v-if="tamResultado>0">Mostrando resultados de: {{resultado}}</h3>
-              <h3 v-else>Mostrando todos los blogs</h3>
-              <li style="list-style-type:none" v-for="blog in blogs">
-                <b-button block v-b-toggle="'collapse-'+blog.identifier" variant="outline-dark" class="mb-3" style="text-align: left" @click="blogId=blog.identifier">{{blog.headline}}</b-button>
-                <!-- @click="getPosts(blog.blogId)" -->
-                <b-collapse :id="'collapse-'+blog.identifier" type="light" variant="light" size="lg">
-                  <h5>{{blog.description}}</h5>
-                  <a style="box-shadow: none" v-for="post in posts">
-                    <p>getUserData("post.author.identifier")</p>
-                      <p>{{users}}</p>
-                      <template v-if="post.blogId.identifier==blog.identifier">
-                        <b-card :title="users['user-'+post.author.identifier]+' dice:' " class="mb-3">
-                          <b-card-text>{{post.text}}</b-card-text>
-                        </b-card>
-                    </template>
-                  </a>
-                  <b-card class="mb-3">
-                    <b-form-group>
-                      <b-form-input v-if='is_loged' v-model.trim="post" placeholder="Añade un comentario" @keyup.enter="addPost(blog.identifier)+getPosts(blog.identifier)">
-                      </b-form-input>
-                      <b-form-input v-else readonly placeholder="Debes estar logueado para comentar"></b-form-input>
-                    </b-form-group>
-                  </b-card>
-                </b-collapse>
-              </li>
-            </ul>
-          </b-card>
-        </b-container>
+        <b-form @submit="searchBlogs" class="input-group" v-on:submit.prevent="">
+          <b-form-input v-model.trim="query" size="sm" class="mr-sm-2" placeholder="Buscar posts"
+            @keyup.enter="searchBlogs"></b-form-input>
+          <b-button type="submit" size="sm" class="my-2 my-sm-0">Buscar</b-button>
+        </b-form>
+      </div>
+      <b-container class="mt-2">
+        <b-card>
+          <ul style="list-style-type:none">
+            <h3 v-if="numBlogs==0">No hay blogs creados</h3>
+            <h3 v-else-if="tamResultado>0">Mostrando resultados de: {{resultado}}</h3>
+            <h3 v-else>Mostrando todos los blogs</h3>
+            <li style="list-style-type:none" v-for="blog in blogs">
+              <b-button block v-b-toggle="'collapse-'+blog.identifier" variant="outline-dark" class="mb-3"
+                style="text-align: left" @click="blogId=blog.identifier">{{blog.headline}}</b-button>
+              <!-- @click="getPosts(blog.blogId)" -->
+              <b-collapse :id="'collapse-'+blog.identifier" type="light" variant="light" size="lg">
+                <h5>{{blog.description}}</h5>
+                <a style="box-shadow: none" v-for="post in posts">
+                  <template v-if="post.blogId.identifier==blog.identifier">
+                    <b-card :title="users[post.author.identifier].name+' dice:' " class="mb-3">
+                      <b-card-text>{{post.text}}</b-card-text>
+                    </b-card>
+                  </template>
+                </a>
+                <b-card class="mb-3">
+                  <b-form-group>
+                    <b-form-input v-if='is_loged' v-model.trim="post" placeholder="Añade un comentario"
+                      @keyup.enter="addPost(blog.identifier)+getPosts(blog.identifier)">
+                    </b-form-input>
+                    <b-form-input v-else readonly placeholder="Debes estar logueado para comentar"></b-form-input>
+                  </b-form-group>
+                </b-card>
+              </b-collapse>
+            </li>
+          </ul>
+        </b-card>
       </b-container>
-    </div>
+    </b-container>
+  </div>
 
   <!-- Start running your app -->
   <script>
     window.app = new Vue({
       el: '#app',
       data: {
-        username: '', //nombre de usuario (no se usa)
-        userId: -1,
+        username: localStorage.name, //nombre de usuario (no se usa)
+        userId: localStorage.userId,
         query: ' ', //búsqueda
         blogId: -1, //blog activado
         numBlogs: 0,
@@ -230,61 +240,12 @@
         resultado: '',
         tamResultado: 0,
         postId: -1,
-        is_loged: false,
+        is_loged: JSON.parse(localStorage.logued),
         user_post_name: '',
         showDismissibleAlert: false,
-        users: {}
-          // {
-          //   "userId": 0,
-          //   "password": "supersecreto",
-          //   "email": "berejena@coco.com",
-          //   "username": "anacleto"
-          // },
-          // {
-          //   "userId": 1,
-          //   "password": "nabos",
-          //   "email": "nabos@4ever.com",
-          //   "username": "nabocop"
-          // }
-        ,
-        blogs: [
-          // {
-          //   "name": "Comida con nabos",
-          //   "description": "platos sencillos hechos de nabos",
-          //   "authorId": 6,
-          //   "category": "category",
-          //   "blogId": 0,
-          //   "tags": [
-          //     "tags",
-          //     "tags"
-          //   ]
-          // },
-          // {
-          //   "name": "Comida con zanahorias",
-          //   "description": "platos sencillos hechos de zanahoria",
-          //   "authorId": 6,
-          //   "category": "category",
-          //   "blogId": 1,
-          //   "tags": [
-          //     "tags",
-          //     "tags"
-          //   ]
-          // }
-        ], //blogs de la búsqueda
-        posts: [
-          // {
-          //   "postId": 0,
-          //   "text": "Madre mia me metia un nabo ente pecho y espalda",
-          //   "authorId": 1,
-          //   "blogId": 0
-          // },
-          // {
-          //   "postId": 1,
-          //   "text": "Buah, yo también eh. Están to buenos",
-          //   "authorId": 0,
-          //   "blogId": 0
-          // }
-        ], //posts del blog activado
+        users: [],
+        blogs: [], //blogs de la búsqueda
+        posts: [], //posts del blog activado
         post: ''  //nuevo post
       },
       computed: {
@@ -334,13 +295,14 @@
           fetch('/post/' + blogId)
             .then(function (r) { return r.json() })
             .then(function (data) {
-              self.posts.push(data[data.length - 1])
+              console.log("Posts: ", data)
+              self.posts = data
             })
             .catch(function (error) { console.log(error) })
         },
         addPost() {
           var self = this
-          var postData = { postId: this.posts.length, text: this.post, authorId: this.userId, blogId: this.blogId }
+          var postData = { postId: this.posts.length, text: this.post, authorId: parseInt(this.userId), blogId: this.blogId }
           this.post = ""
           console.log(postData)
 
@@ -401,27 +363,18 @@
             .then(function (data) { console.log(data) })
             .catch(function (error) { console.log(error) })
         },
-        async getUserData(userId) {
+        getUserData() {
           var self = this
 
-          await fetch('/user/' + userId)
+          fetch('/user/')
             .then(function (r) { return r.json() })
             .then(function (data) {
               // console.log("usuario obtienido: ",data)
-              self.users["user-"+data.identifier] = data
+              self.users = data
             })
             .catch(function (error) { console.log(error) })
         },
 
-        // Añadimos el nuevo usuario a la lista para las comprobaciones
-        //   fetch('/user/' + this.users.length)
-        //     .then(function (r) { return r.json() })
-        //     .then(function (data) {
-        //       console.log(data)
-        //       self.users.push(data)
-        //     })
-        //     .catch(function (error) { console.log(error) })
-        // },
         createBlog() {
           var self = this
           var title = document.getElementById("titulo").value
@@ -475,40 +428,24 @@
               if (data.identifier == -1) {
                 alert("Usuario o contraseña incorrectos")
               } else {
-                self.is_loged = true
+                localStorage.name = data.name
                 self.username = data.name
+                window.alert("Bienvenido " + data.name)
+                localStorage.userId = data.identifier
                 self.userId = data.identifier
+                localStorage.logued = true
+                self.is_loged = true
               }
             })
             .catch(function (error) { console.log(error) })
         },
         logout() {
+          localStorage.logued = false
           window.location.reload()
         },
         loadData() {
           var self = this
-
-          // fetch('/user/0')
-          //   .then(function (r) { return r.json() })
-          //   .then(function (data) {
-          //     console.log(data)
-          //     self.users.push(data)
-          //   })
-          //   .catch(function (error) { console.log(error) })
-          // let usuario
-          // this.getUserData(0)
-          // console.log(self.users)
-          // var i = 0
-          // console.log("Usuario 0: ", self.users[0])
-          // let usuario = self.users[i]
-          
-          // while(usuario.identifier!=-1){
-          //   i++
-          //   this.getUserData(i)
-          //   usuario = self.users[i]
-          // }
-          // self.users.splice(i,1)
-
+          self.getUserData();
 
           fetch('/blog?query=' + encodeURIComponent(this.query))
             .then(function (r) { return r.json() })
@@ -521,11 +458,7 @@
                 fetch('/post/' + i)
                   .then(function (r) { return r.json() })
                   .then(function (data) {
-                    console.log(data)
-                    for (var j = 0; j < data.length; j++) {
-                      self.posts.push(data[j])
-                      // self.getUserData(data[j].author.identifier)
-                    }
+                    self.posts = data
                   })
                   .catch(function (error) { console.log(error) })
               }
@@ -534,7 +467,6 @@
         }
       },
       beforeMount() {
-        // this.getUserData(0)
         this.loadData()
       }
     })
