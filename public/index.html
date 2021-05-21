@@ -20,6 +20,7 @@
 
   <!-- Load Vue followed by BootstrapVueIcons -->
   <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+  
 </head>
 
 <body>
@@ -186,9 +187,9 @@
         </b-modal>
 
         <b-form @submit="searchBlogs" class="input-group" v-on:submit.prevent="">
-          <b-form-input v-model.trim="query" size="sm" class="mr-sm-2" placeholder="Buscar posts"
+          <b-form-input v-model.trim="query" size="sm" style="margin-right: 8;" class="mr-sm-2" placeholder="Buscar posts"
             @keyup.enter="searchBlogs"></b-form-input>
-          <b-button type="submit" size="sm" class="my-2 my-sm-0">Buscar</b-button>
+          <b-button type="submit" size="sm" class="my-sm-0">Buscar</b-button>
         </b-form>
       </div>
       <b-container class="mt-2">
