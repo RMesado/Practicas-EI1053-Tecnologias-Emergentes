@@ -67,7 +67,7 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
     console.log('Swagger-ui is available on http://localhost:%d/docs', serverPort);
   });
   const mng = require('mongoose');
-  const my_conn = "mongodb+srv://rafa:rafa1234@cluster0.lcw24.mongodb.net/EI1053?retryWrites=true&w=majority";
+  const my_conn = "Insertar enlace a database de mongodb";
   mng.connect(my_conn);
 
 
